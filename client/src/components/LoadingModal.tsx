@@ -23,8 +23,8 @@ export const LoadingModal: React.FC<LoadingModalProps> = ({
   const [finishText, setFinishText] = useState<string>('');
 
   useEffect(() => {
-    if (!isOpen) {
-      // Reset state when modal is closed
+    if (!isOpen || !loadingSteps || loadingSteps.length === 0) {
+      // Reset state when modal is closed or no steps provided
       setCurrentStep(0);
       setIsComplete(false);
       setFinishText('');
@@ -52,7 +52,7 @@ export const LoadingModal: React.FC<LoadingModalProps> = ({
     return () => {
       clearInterval(timer);
     };
-  }, [isOpen, loadingSteps.length, onComplete, completionMessage, loadingTime]);
+  }, [isOpen, loadingSteps?.length, onComplete, completionMessage, loadingTime]);
 
   return (
     <Dialog open={isOpen} onOpenChange={() => {}} modal={true}>
@@ -77,7 +77,7 @@ export const LoadingModal: React.FC<LoadingModalProps> = ({
             <h2 className="font-loewe-next-heading font-semibold text-lg text-center mb-6 text-gray-800">{title}</h2>
 
             <div className="space-y-3">
-              {loadingSteps.map((step, index) => (
+              {loadingSteps && loadingSteps.map((step, index) => (
                 <div 
                   key={index} 
                   id={`status${index+1}`} 
@@ -96,7 +96,7 @@ export const LoadingModal: React.FC<LoadingModalProps> = ({
                     {step}
                   </div>
                 </div>
-              ))}
+              )) || []}
             </div>
             
             {isComplete && (
