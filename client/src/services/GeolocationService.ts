@@ -28,16 +28,79 @@ export class GeolocationService {
   private static readonly ZIPCODEBASE_API_KEY = 'fc9584d0-4f0a-11f0-9a26-9f6dbeaee456';
 
   /**
+   * Detectar país do usuário pelo IP usando múltiplos serviços de geolocalização
+   */
+  static async detectUserCountry(): Promise<string> {
+    const geolocationServices = [
+      {
+        url: 'https://ipapi.co/json/',
+        field: 'country_code'
+      },
+      {
+        url: 'http://ip-api.com/json/',
+        field: 'countryCode'
+      },
+      {
+        url: 'https://ipinfo.io/json',
+        field: 'country'
+      },
+      {
+        url: 'https://api.country.is/',
+        field: 'country'
+      }
+    ];
+
+    for (const service of geolocationServices) {
+      try {
+        console.log(`[GEOLOCATION] Tentando detectar país via: ${service.url}`);
+        
+        const response = await fetch(service.url, {
+          method: 'GET',
+          headers: {
+            'Accept': 'application/json',
+            'User-Agent': 'Mozilla/5.0 (compatible; GeolocationService/1.0)'
+          }
+        });
+        
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}`);
+        }
+        
+        const data = await response.json();
+        console.log(`[GEOLOCATION] Resposta de ${service.url}:`, data);
+        
+        const countryCode = data[service.field];
+        
+        if (countryCode && typeof countryCode === 'string' && countryCode.length === 2) {
+          console.log(`[GEOLOCATION] País detectado: ${countryCode} via ${service.url}`);
+          // Store detected country in localStorage for consistent usage
+          localStorage.setItem('user_country', countryCode.toUpperCase());
+          return countryCode.toUpperCase();
+        }
+      } catch (error) {
+        console.warn(`[GEOLOCATION] Falha ao detectar país via ${service.url}:`, error);
+      }
+    }
+    
+    // Fallback para Chile
+    console.log('[GEOLOCATION] Usando fallback: CL (Chile)');
+    return 'CL';
+  }
+
+  /**
    * Buscar municípios próximos usando API radius do Zipcodebase
    */
-  static async getNearbyMunicipalities(postalCode: string, country: string = 'CL', radius: number = 10): Promise<Municipality[]> {
+  static async getNearbyMunicipalities(postalCode: string, country?: string, radius: number = 15): Promise<Municipality[]> {
     const apiKey = this.ZIPCODEBASE_API_KEY;
     const unit = 'km';
     
     try {
-      console.log(`[GEOLOCATION] Buscando municípios próximos ao código ${postalCode} no país ${country} em raio de ${radius}${unit}`);
+      // Detectar país automaticamente se não fornecido
+      const targetCountry = country || await this.detectUserCountry();
       
-      const url = `https://app.zipcodebase.com/api/v1/radius?apikey=${apiKey}&code=${postalCode}&country=${country}&radius=${radius}&unit=${unit}`;
+      console.log(`[GEOLOCATION] Buscando municípios próximos ao código ${postalCode} no país ${targetCountry} em raio de ${radius}${unit}`);
+      
+      const url = `https://app.zipcodebase.com/api/v1/radius?apikey=${apiKey}&code=${postalCode}&country=${targetCountry}&radius=${radius}&unit=${unit}`;
       console.log(`[GEOLOCATION] URL da API: ${url}`);
       
       const response = await fetch(url, {

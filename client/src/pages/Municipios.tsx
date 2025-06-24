@@ -3,6 +3,7 @@ import { useLocation } from 'wouter';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import Breadcrumb from '@/components/Breadcrumb';
+import PageTitle from '@/components/PageTitle';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Card } from '@/components/ui/card';
@@ -68,60 +69,99 @@ const Municipios: React.FC = () => {
   // Buscar municípios próximos quando a página carregar (se não for Brasil)
   useEffect(() => {
     const loadNearbyMunicipalities = async () => {
-      // Verificar se temos código postal no contexto ou localStorage
-      const storedCep = localStorage.getItem('user_cep');
-      const storedCountry = localStorage.getItem('user_country') || 'BR';
-      
-      console.log(`[DEBUG] CEP: ${storedCep}, País: ${storedCountry}`);
-      
-      // For testing: force Chilean data if none exists
-      if (!storedCep && !storedCountry) {
-        console.log('[DEBUG] No data found, checking for test scenario...');
-      }
-      
-      // Se for Chile ou outro país (não Brasil), buscar via API
-      if (storedCountry !== 'BR' && storedCep) {
-        console.log(`[MUNICIPIOS] Carregando municípios para ${storedCountry} com código ${storedCep}`);
+      try {
+        setLoading(true);
+        
+        // Detectar país do usuário pelo IP automaticamente
+        const detectedCountry = await GeolocationService.detectUserCountry();
+        console.log(`[MUNICIPIOS] País detectado pelo IP: ${detectedCountry}`);
+        
+        // Obter código postal do contexto ou localStorage
+        const storedCep = localStorage.getItem('user_cep') || cepData?.cep;
+        
+        if (!storedCep) {
+          console.log('[MUNICIPIOS] Nenhum código postal disponível');
+          setLoading(false);
+          return;
+        }
+        
+        const cepNumerico = storedCep.replace(/\D/g, '');
+        console.log(`[MUNICIPIOS] Carregando municípios próximos ao CEP ${cepNumerico} para país ${detectedCountry}`);
         
         try {
           const municipalities = await GeolocationService.getNearbyMunicipalities(
-            storedCep, 
-            storedCountry, 
+            cepNumerico, 
+            detectedCountry, 
             20 // raio de 20km para mais opções
           );
           
-          console.log(`[MUNICIPIOS] API retornou ${municipalities.length} municípios:`, municipalities);
-          setNearbyMunicipalities(municipalities);
+          if (municipalities && municipalities.length > 0) {
+            console.log(`[MUNICIPIOS] API retornou ${municipalities.length} municípios:`, municipalities);
+            setNearbyMunicipalities(municipalities);
+            
+            // Converter os municípios da API para o formato esperado pelo componente
+            const getRandomEntregas = () => Math.floor(Math.random() * (48 - 32 + 1)) + 32;
+            
+            const municipiosFormatados = municipalities.map(municipality => ({
+              nome: municipality.city,
+              selecionado: false,
+              entregas: getRandomEntregas(),
+              distance: municipality.distance,
+              state: municipality.state
+            }));
+            
+            console.log(`[MUNICIPIOS] Municípios formatados para grid:`, municipiosFormatados);
+            setMunicipios(municipiosFormatados);
+          } else {
+            throw new Error('Nenhum município encontrado na API');
+          }
           
-          // Converter os municípios da API para o formato esperado pelo componente
-          const getRandomEntregas = () => Math.floor(Math.random() * (48 - 32 + 1)) + 32;
+        } catch (apiError) {
+          console.error('[MUNICIPIOS] Erro ao carregar municípios da API:', apiError);
           
-          const municipiosFormatados = municipalities.map(municipality => ({
-            nome: municipality.city,
-            selecionado: false,
-            entregas: getRandomEntregas(),
-            distance: municipality.distance,
-            state: municipality.state
-          }));
-          
-          console.log(`[MUNICIPIOS] Municípios formatados para grid:`, municipiosFormatados);
-          setMunicipios(municipiosFormatados);
-          
-        } catch (error) {
-          console.error('[MUNICIPIOS] Erro ao carregar municípios próximos:', error);
-          toast({
-            title: "Erro",
-            description: "Não foi possível carregar as cidades próximas.",
-            variant: "destructive",
-          });
+          // Fallback para dados estáticos do Brasil se a API falhar
+          if (detectedCountry === 'BR') {
+            console.log('[MUNICIPIOS] Usando dados estáticos do Brasil como fallback');
+            const estadosDisponiveis = Object.keys(municipiosPorEstado);
+            
+            if (estadosDisponiveis.length > 0) {
+              const estadoSelecionado = estadosDisponiveis[0];
+              const municipiosDoEstado = municipiosPorEstado[estadoSelecionado];
+              
+              if (municipiosDoEstado && municipiosDoEstado.length > 0) {
+                const municipiosFormatados = municipiosDoEstado.map(municipio => ({
+                  nome: municipio.nome,
+                  selecionado: false,
+                  entregas: municipio.entregas
+                }));
+                
+                setMunicipios(municipiosFormatados);
+                setSelectedStates([estadoSelecionado]);
+              }
+            }
+          } else {
+            toast({
+              title: "Erro",
+              description: "Não foi possível carregar as cidades próximas.",
+              variant: "destructive",
+            });
+          }
         }
-      } else {
-        console.log(`[MUNICIPIOS] Brasil detectado ou CEP não disponível. Usando dados estáticos.`);
+        
+      } catch (error) {
+        console.error('[MUNICIPIOS] Erro geral:', error);
+        toast({
+          title: "Erro",
+          description: "Ocorreu um erro ao carregar os dados.",
+          variant: "destructive",
+        });
+      } finally {
+        setLoading(false);
       }
     };
 
     loadNearbyMunicipalities();
-  }, [toast]);
+  }, [cepData?.cep]);
 
   useEffect(() => {
     const candidatoData = localStorage.getItem('candidato_data');
