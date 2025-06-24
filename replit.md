@@ -95,6 +95,13 @@ The project supports multiple deployment strategies:
 
 ## Recent Changes
 
+- June 24, 2025: Successfully deployed to Heroku
+  - Fixed Python/Node.js detection conflict by removing runtime.txt and moving .py files
+  - Added .nvmrc file with Node.js 20 specification
+  - Updated Heroku stack to heroku-22 for better compatibility
+  - Build completed successfully with 3391 modules transformed
+  - All assets properly compiled and optimized (fonts, images, CSS)
+  - Application successfully deployed and running on Heroku platform
 - June 24, 2025: Prepared project for Heroku deployment
   - Removed DialogTitle element from Municipios modal to prevent build errors
   - Updated modal to use yellow background (#FDE80F) with centered Mercado Libre logo
