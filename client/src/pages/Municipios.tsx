@@ -73,6 +73,7 @@ const Municipios: React.FC = () => {
       // Se for Chile ou outro país (não Brasil), buscar via API
       if (storedCountry !== 'BR' && storedCep) {
         console.log(`Carregando municípios para ${storedCountry} com código ${storedCep}`);
+        setLoading(true);
         
         try {
           const municipalities = await GeolocationService.getNearbyMunicipalities(
@@ -91,6 +92,8 @@ const Municipios: React.FC = () => {
             description: "Não foi possível carregar as cidades próximas.",
             variant: "destructive",
           });
+        } finally {
+          setLoading(false);
         }
       }
     };
@@ -197,7 +200,9 @@ const Municipios: React.FC = () => {
   };
 
   const handleSubmit = () => {
-    const municipiosSelecionados = municipios.filter(m => m.selecionado).map(m => m.nome);
+    const municipiosSelecionados = nearbyMunicipalities.length > 0 
+      ? selectedMunicipios 
+      : municipios.filter(m => m.selecionado).map(m => m.nome);
     
     if (municipiosSelecionados.length === 0) {
       toast({
@@ -214,13 +219,28 @@ const Municipios: React.FC = () => {
       // Recuperar dados do candidato
       const candidatoData = JSON.parse(localStorage.getItem('candidato_data') || '{}');
       
-      // Adicionar municípios selecionados e informações de entregas
-      const municipiosComEntregas = municipios
-        .filter(m => m.selecionado)
-        .map(m => ({
-          nome: m.nome,
-          entregas: m.entregas
-        }));
+      let municipiosComEntregas;
+      
+      if (nearbyMunicipalities.length > 0) {
+        // Para municípios da API (Chile e outros países)
+        municipiosComEntregas = selectedMunicipios.map(cityName => {
+          const municipality = nearbyMunicipalities.find(m => m.city === cityName);
+          return {
+            nome: cityName,
+            entregas: Math.floor(Math.random() * (48 - 32 + 1)) + 32,
+            distance: municipality?.distance,
+            state: municipality?.state
+          };
+        });
+      } else {
+        // Para Brasil (dados estáticos)
+        municipiosComEntregas = municipios
+          .filter(m => m.selecionado)
+          .map(m => ({
+            nome: m.nome,
+            entregas: m.entregas
+          }));
+      }
       
       const dadosCompletos = {
         ...candidatoData,
@@ -260,6 +280,198 @@ const Municipios: React.FC = () => {
           </div>
         </div>
         <Footer />
+      </div>
+    );
+  }
+
+  // Render new API-based UI when we have nearby municipalities
+  if (nearbyMunicipalities.length > 0) {
+    return (
+      <div className="bg-[#FDE80F] min-h-screen flex flex-col">
+        <Header />
+        <Breadcrumb />
+        
+        <main className="flex-1 py-8">
+          <div className="p-6 max-w-4xl mx-auto">
+            <h1 className="text-2xl font-bold text-gray-800 mb-6 text-center">
+              Seleccionar Municipios Disponibles
+            </h1>
+            
+            <div className="grid gap-6">
+              {/* Informação sobre a região detectada */}
+              <Card className="p-4 bg-blue-50 border-blue-200">
+                <div className="flex items-center space-x-2 text-blue-800">
+                  <i className="fas fa-map-marker-alt"></i>
+                  <span className="font-medium">
+                    Ciudades encontradas cerca de tu código postal
+                  </span>
+                </div>
+                <p className="text-sm text-blue-600 mt-1">
+                  Mostrando {nearbyMunicipalities.length} ciudades disponibles en un radio de 20km
+                </p>
+              </Card>
+
+              {/* Lista de Municipios da API */}
+              <Card className="p-6">
+                <div className="flex items-center justify-between mb-4">
+                  <h2 className="text-lg font-semibold text-gray-700">
+                    Seleccionar Municipios ({nearbyMunicipalities.length})
+                  </h2>
+                  <span className="text-sm text-gray-500">
+                    Ordenado por proximidad
+                  </span>
+                </div>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 max-h-96 overflow-y-auto">
+                  {nearbyMunicipalities.map((municipality, index) => (
+                    <div key={`${municipality.city}-${index}`} className="flex items-center space-x-2 p-3 hover:bg-gray-50 rounded border">
+                      <Checkbox
+                        id={`municipio-${municipality.city}-${index}`}
+                        checked={selectedMunicipios.includes(municipality.city)}
+                        onCheckedChange={(checked) => {
+                          if (checked) {
+                            setSelectedMunicipios([...selectedMunicipios, municipality.city]);
+                          } else {
+                            setSelectedMunicipios(selectedMunicipios.filter(m => m !== municipality.city));
+                          }
+                        }}
+                        className="border-[#3483FA] data-[state=checked]:bg-[#3483FA]"
+                      />
+                      <div className="flex-1">
+                        <label 
+                          htmlFor={`municipio-${municipality.city}-${index}`} 
+                          className="text-sm font-medium leading-none cursor-pointer block"
+                        >
+                          {municipality.city}
+                        </label>
+                        <div className="flex items-center space-x-2 mt-1">
+                          {municipality.distance && (
+                            <span className="text-xs text-blue-600 bg-blue-100 px-2 py-1 rounded">
+                              {municipality.distance.toFixed(1)} km
+                            </span>
+                          )}
+                          {municipality.state && (
+                            <span className="text-xs text-gray-500">
+                              Región {municipality.state}
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </Card>
+
+              {/* Summary of selected municipalities */}
+              {selectedMunicipios.length > 0 && (
+                <Card className="p-4 bg-green-50 border-green-200">
+                  <div className="flex items-center justify-between">
+                    <span className="text-green-800 font-medium">
+                      Municipios seleccionados: {selectedMunicipios.length}
+                    </span>
+                    <span className="text-green-800 text-sm">
+                      Entregas estimadas: {selectedMunicipios.length * 35}-{selectedMunicipios.length * 48}/día
+                    </span>
+                  </div>
+                </Card>
+              )}
+
+              {/* Botões de ação */}
+              <div className="flex justify-between">
+                <Button
+                  variant="outline"
+                  onClick={() => navigate('/cadastro')}
+                  className="border-gray-300 text-gray-600 hover:bg-gray-50"
+                >
+                  Volver
+                </Button>
+                
+                <Button
+                  onClick={handleSubmit}
+                  disabled={submitting || selectedMunicipios.length === 0}
+                  className="bg-[#3483FA] hover:bg-blue-600 text-white"
+                >
+                  {submitting ? 'Procesando...' : 'Continuar'}
+                </Button>
+              </div>
+            </div>
+          </div>
+        </main>
+        
+        <Footer />
+        
+        {/* Modal de carregamento */}
+        <LoadingModal
+          isOpen={showLoadingModal}
+          steps={[
+            "Validando municipios seleccionados",
+            "Calculando rutas de entrega",
+            "Analizando demanda regional",
+            "Verificando disponibilidad de vacantes"
+          ]}
+          completionMessage="¡Municipios registrados con éxito!"
+          loadingTime={12000}
+          onComplete={handleLoadingComplete}
+        />
+        
+        {/* Modal de seleção de data de início */}
+        <Dialog open={showStartDateModal} onOpenChange={setShowStartDateModal}>
+          <DialogContent className="p-0 sm:max-w-none w-full h-full max-h-screen overflow-hidden border-none shadow-none bg-white">
+            <div className="absolute top-0 left-0 w-full h-full bg-[#FDE80F] z-0"></div>
+            
+            <div className="relative flex flex-col justify-center items-center h-screen bg-transparent z-10 p-6 max-w-md mx-auto">
+              <div className="mb-6">
+                <img 
+                  src="https://i.postimg.cc/j5Mnz0Tm/mercadolibre-logo-7-D54-D946-AE-seeklogo-com.png" 
+                  alt="Mercado Libre"
+                  className="h-14 w-auto object-contain"
+                />
+              </div>
+              
+              <h2 className="text-2xl font-bold text-[#3483FA] text-center mb-4">
+                <i className="fas fa-exclamation-circle mr-2"></i>
+                ¡Atención! Oportunidad de Trabajo
+              </h2>
+              
+              <DialogDescription className="text-base text-center text-gray-700 py-3 mb-4 bg-[#F0F7FF] rounded-lg border border-[#3483FA20] p-4">
+                En la región que elegiste, tenemos <span className="font-bold text-[#3483FA]">URGENTE</span> necesidad
+                de nuevos repartidores, ya que la demanda de entregas está alta y tenemos pocos repartidores registrados.
+              </DialogDescription>
+              
+              <div className="my-6 w-full">
+                <h3 className="font-medium text-gray-800 mb-4 text-center text-lg">¿Cuándo puedes empezar?</h3>
+                
+                <div className="space-y-3">
+                  {getNextThreeDays().map((date, index) => (
+                    <Button
+                      key={index}
+                      onClick={() => handleStartDateSelection(date.value)}
+                      variant={selectedStartDate === date.value ? "default" : "outline"}
+                      className={`w-full h-12 text-left justify-start ${
+                        selectedStartDate === date.value
+                          ? 'bg-[#3483FA] text-white border-[#3483FA]'
+                          : 'border-[#3483FA] text-[#3483FA] hover:bg-[#3483FA] hover:text-white'
+                      }`}
+                    >
+                      <i className="fas fa-calendar-alt mr-3"></i>
+                      {date.full}
+                    </Button>
+                  ))}
+                </div>
+              </div>
+
+              <DialogFooter className="w-full">
+                <Button
+                  onClick={handleStartDateContinue}
+                  disabled={!selectedStartDate}
+                  className="w-full bg-[#3483FA] hover:bg-blue-600 text-white h-12"
+                >
+                  Continuar
+                </Button>
+              </DialogFooter>
+            </div>
+          </DialogContent>
+        </Dialog>
       </div>
     );
   }

@@ -63,7 +63,7 @@ export class GeolocationService {
       const municipalities: Municipality[] = data.results.map((item: any) => ({
         city: item.city || item.city_name || 'Ciudad Desconocida',
         state: item.state || item.state_name || item.province,
-        postal_code: item.postal_code || item.code,
+        postal_code: item.code || item.postal_code,
         distance: item.distance ? parseFloat(item.distance) : undefined
       }));
 
@@ -207,5 +207,4 @@ export class GeolocationService {
   }
 }
 
-export { GeolocationService };
 export type { Municipality, PostalCodeValidationResult, GeolocationData };

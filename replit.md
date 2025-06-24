@@ -95,6 +95,13 @@ The project supports multiple deployment strategies:
 
 ## Recent Changes
 
+- June 24, 2025: Implemented Zipcodebase radius API integration for Chile municipalities
+  - Created GeolocationService with getNearbyMunicipalities method for radius API calls
+  - Updated Municipios page to dynamically load cities based on user's postal code
+  - Added support for Chile (CL) with 20km radius search for available delivery cities
+  - Enhanced UI to show distance and state information for each municipality
+  - Integrated fallback to Brazilian static data when not using international postal codes
+  - API endpoint: https://app.zipcodebase.com/api/v1/radius with API key fc9584d0-4f0a-11f0-9a26-9f6dbeaee456
 - June 24, 2025: Successfully deployed to Heroku
   - Fixed Python/Node.js detection conflict by removing runtime.txt and moving .py files
   - Added .nvmrc file with Node.js 20 specification
