@@ -316,8 +316,9 @@ const Municipios: React.FC = () => {
 
   // Main UI that works for both API data and static data
   return (
-    <div className="bg-[#FDE80F] min-h-screen flex flex-col">
-      <Header />
+    <>
+      <div className="bg-[#FDE80F] min-h-screen flex flex-col">
+        <Header />
       <Breadcrumb />
       <PageTitle title="Seleccionar Municipios" />
       <div className="container mx-auto px-4 py-8">
@@ -810,25 +811,24 @@ const Municipios: React.FC = () => {
         </div>
       </div>
       
-      <>
-        <Footer />
-        
-        <LoadingModal
-          isOpen={showLoadingModal}
-          onComplete={handleLoadingComplete}
-          title="Procesando Selección"
-          loadingSteps={[
-            "Verificando municipios seleccionados",
-            "Calculando rutas de entrega",
-            "Analizando demanda regional",
-            "Verificando disponibilidad de vacantes"
-          ]}
-          completionMessage="¡Municipios registrados con éxito!"
-          loadingTime={12000}
-        />
-        
-        {/* Modal de seleção de data de início */}
-        <Dialog open={showStartDateModal} onOpenChange={setShowStartDateModal}>
+      <Footer />
+      
+      <LoadingModal
+        isOpen={showLoadingModal}
+        onComplete={handleLoadingComplete}
+        title="Procesando Selección"
+        loadingSteps={[
+          "Verificando municipios seleccionados",
+          "Calculando rutas de entrega",
+          "Analizando demanda regional",
+          "Verificando disponibilidad de vacantes"
+        ]}
+        completionMessage="¡Municipios registrados con éxito!"
+        loadingTime={12000}
+      />
+      
+      {/* Modal de seleção de data de início */}
+      <Dialog open={showStartDateModal} onOpenChange={setShowStartDateModal}>
         <DialogContent className="p-0 sm:max-w-none w-full h-full max-h-screen overflow-hidden border-none shadow-none bg-white">
           <div className="absolute top-0 left-0 w-full h-full bg-[#FDE80F] z-0"></div>
           
@@ -891,9 +891,8 @@ const Municipios: React.FC = () => {
             </div>
           </div>
         </DialogContent>
-        </Dialog>
-      </>
-    </div>
+      </Dialog>
+    </>
   );
 };
 
