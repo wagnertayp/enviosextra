@@ -365,85 +365,91 @@ const Municipios: React.FC = () => {
         <div className="max-w-4xl mx-auto">
           
           <div className="text-center mb-6">
-            <h1 className="text-2xl font-bold text-gray-800 mb-2">Seleccionar Municipios Disponibles</h1>
+            <h1 className="text-2xl font-bold text-gray-800 mb-2">Centros de Distribución Disponibles</h1>
             <p className="text-gray-600">
-              {nearbyMunicipalities.length > 0 
-                ? `Ciudades encontradas cerca de tu código postal (${nearbyMunicipalities.length} disponibles)`
-                : 'Elige las zonas donde te gustaría realizar entregas'
-              }
+              Selecciona las ciudades donde puedes recoger los pedidos en el Centro de distribución de Mercado Libre. En cada ciudad a continuación está ubicado un centro de distribución y según tu disponibilidad puedes elegir más de 1 centro para recoger los pedidos.
             </p>
           </div>
 
           {/* Show API-based municipalities if available */}
           {nearbyMunicipalities.length > 0 && (
             <>
-              <Card className="p-4 bg-blue-50 border-blue-200 mb-6">
-                <div className="flex items-center space-x-2 text-blue-800">
-                  <i className="fas fa-map-marker-alt"></i>
-                  <span className="font-medium">
-                    Ciudades encontradas cerca de tu código postal
-                  </span>
-                </div>
-                <p className="text-sm text-blue-600 mt-1">
-                  Mostrando {nearbyMunicipalities.length} ciudades disponibles en un radio de 20km
-                </p>
-              </Card>
+              
 
-              <Card className="p-6 mb-6">
-                <div className="flex items-center justify-between mb-4">
+              <Card className="p-4 sm:p-6 mb-6">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 gap-2">
                   <h2 className="text-lg font-semibold text-gray-700">
-                    Seleccionar Municipios ({nearbyMunicipalities.length})
+                    Centros de Distribución ({nearbyMunicipalities.length})
                   </h2>
                   <span className="text-sm text-gray-500">
                     Ordenado por proximidad
                   </span>
                 </div>
                 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 max-h-96 overflow-y-auto">
-                  {nearbyMunicipalities.map((municipality, index) => (
-                    <div key={`${municipality.city}-${index}`} className="flex items-center space-x-2 p-3 hover:bg-gray-50 rounded border">
-                      <Checkbox
-                        id={`municipio-${municipality.city}-${index}`}
-                        checked={selectedMunicipios.includes(municipality.city)}
-                        onCheckedChange={(checked) => {
-                          if (checked) {
-                            setSelectedMunicipios([...selectedMunicipios, municipality.city]);
-                          } else {
+                <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 max-h-96 overflow-y-auto">
+                  {nearbyMunicipalities.map((municipality, index) => {
+                    const isSelected = selectedMunicipios.includes(municipality.city);
+                    return (
+                      <div 
+                        key={`${municipality.city}-${index}`} 
+                        className={`p-3 border rounded-lg cursor-pointer transition-all duration-200 hover:shadow-md ${
+                          isSelected 
+                            ? 'border-[#3483FA] bg-[#F0F7FF] shadow-sm' 
+                            : 'border-gray-200 bg-white hover:border-gray-300'
+                        }`}
+                        onClick={() => {
+                          if (isSelected) {
                             setSelectedMunicipios(selectedMunicipios.filter(m => m !== municipality.city));
+                          } else {
+                            setSelectedMunicipios([...selectedMunicipios, municipality.city]);
                           }
                         }}
-                        className="border-[#3483FA] data-[state=checked]:bg-[#3483FA]"
-                      />
-                      <div className="flex-1">
-                        <label 
-                          htmlFor={`municipio-${municipality.city}-${index}`} 
-                          className="text-sm font-medium leading-none cursor-pointer block"
-                        >
-                          {municipality.city}
-                        </label>
-                        <div className="flex items-center space-x-2 mt-1">
-                          {municipality.distance !== undefined && (
-                            <span className="text-xs text-blue-600 bg-blue-100 px-2 py-1 rounded">
-                              {municipality.distance.toFixed(1)} km
-                            </span>
-                          )}
-                          {municipality.state && (
-                            <span className="text-xs text-gray-500">
-                              Región {municipality.state}
-                            </span>
-                          )}
+                      >
+                        <div className="flex items-start space-x-2">
+                          <Checkbox
+                            id={`municipio-${municipality.city}-${index}`}
+                            checked={isSelected}
+                            onCheckedChange={(checked) => {
+                              if (checked) {
+                                setSelectedMunicipios([...selectedMunicipios, municipality.city]);
+                              } else {
+                                setSelectedMunicipios(selectedMunicipios.filter(m => m !== municipality.city));
+                              }
+                            }}
+                            className="border-[#3483FA] data-[state=checked]:bg-[#3483FA] mt-0.5 flex-shrink-0"
+                          />
+                          <div className="flex-1 min-w-0">
+                            <label 
+                              htmlFor={`municipio-${municipality.city}-${index}`} 
+                              className="text-sm font-medium leading-tight cursor-pointer block text-gray-800"
+                            >
+                              {municipality.city}
+                            </label>
+                            <div className="flex flex-col gap-1 mt-1">
+                              {municipality.distance !== undefined && (
+                                <span className="text-xs text-blue-600 bg-blue-100 px-2 py-0.5 rounded-full w-fit">
+                                  {municipality.distance.toFixed(1)} km
+                                </span>
+                              )}
+                              {municipality.state && (
+                                <span className="text-xs text-gray-500">
+                                  Región {municipality.state}
+                                </span>
+                              )}
+                            </div>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               </Card>
 
               {selectedMunicipios.length > 0 && (
                 <Card className="p-4 bg-green-50 border-green-200 mb-6">
-                  <div className="flex items-center justify-between">
+                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
                     <span className="text-green-800 font-medium">
-                      Municipios seleccionados: {selectedMunicipios.length}
+                      Centros seleccionados: {selectedMunicipios.length}
                     </span>
                     <span className="text-green-800 text-sm">
                       Entregas estimadas: {selectedMunicipios.length * 35}-{selectedMunicipios.length * 48}/día
