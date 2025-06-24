@@ -11,6 +11,7 @@ import { useToast } from '@/hooks/use-toast';
 import { useAppContext } from '@/contexts/AppContext';
 import { LoadingModal } from '@/components/LoadingModal';
 import { useScrollTop } from '@/hooks/use-scroll-top';
+import { GeolocationService, type Municipality } from '@/services/GeolocationService';
 
 import municipiosPorEstado from '@/data/municipios-por-estado';
 
@@ -31,8 +32,71 @@ const Municipios: React.FC = () => {
   const [showLoadingModal, setShowLoadingModal] = useState(false);
   const [showStartDateModal, setShowStartDateModal] = useState(false);
   const [selectedStartDate, setSelectedStartDate] = useState<string | null>(null);
+  const [selectedStates, setSelectedStates] = useState<string[]>([]);
+  const [selectedMunicipios, setSelectedMunicipios] = useState<string[]>([]);
+  const [nearbyMunicipalities, setNearbyMunicipalities] = useState<Municipality[]>([]);
   const [, navigate] = useLocation();
   const { toast } = useToast();
+
+  // Estados do mapa de municipios estático (fallback para Brasil)
+  const availableStates = useMemo(() => {
+    return Object.keys(municipiosPorEstado);
+  }, []);
+
+  // Municipios baseados nos estados selecionados (Brasil) ou API (outros países)
+  const availableMunicipios = useMemo(() => {
+    // Se tivermos municípios da API (Chile e outros países), usar esses
+    if (nearbyMunicipalities.length > 0) {
+      return nearbyMunicipalities.map(m => m.city).sort();
+    }
+    
+    // Fallback para Brasil usando dados estáticos
+    if (selectedStates.length === 0) return [];
+    
+    const municipios: string[] = [];
+    selectedStates.forEach(state => {
+      if (municipiosPorEstado[state]) {
+        municipios.push(...municipiosPorEstado[state]);
+      }
+    });
+    
+    return [...new Set(municipios)].sort();
+  }, [selectedStates, nearbyMunicipalities]);
+
+  // Buscar municípios próximos quando a página carregar (se não for Brasil)
+  useEffect(() => {
+    const loadNearbyMunicipalities = async () => {
+      // Verificar se temos código postal no contexto ou localStorage
+      const storedCep = localStorage.getItem('user_cep');
+      const storedCountry = localStorage.getItem('user_country') || 'BR';
+      
+      // Se for Chile ou outro país (não Brasil), buscar via API
+      if (storedCountry !== 'BR' && storedCep) {
+        console.log(`Carregando municípios para ${storedCountry} com código ${storedCep}`);
+        
+        try {
+          const municipalities = await GeolocationService.getNearbyMunicipalities(
+            storedCep, 
+            storedCountry, 
+            20 // raio de 20km para mais opções
+          );
+          
+          setNearbyMunicipalities(municipalities);
+          console.log(`Carregados ${municipalities.length} municípios próximos`);
+          
+        } catch (error) {
+          console.error('Erro ao carregar municípios próximos:', error);
+          toast({
+            title: "Erro",
+            description: "Não foi possível carregar as cidades próximas.",
+            variant: "destructive",
+          });
+        }
+      }
+    };
+
+    loadNearbyMunicipalities();
+  }, [toast]);
 
   useEffect(() => {
     const candidatoData = localStorage.getItem('candidato_data');
@@ -42,7 +106,7 @@ const Municipios: React.FC = () => {
       return;
     }
 
-    // Carregar municípios do estado do usuário
+    // Carregar municípios do estado do usuário (Brasil)
     const estadoSigla = cepData.state;
     
     if (estadoSigla && municipiosPorEstado[estadoSigla as keyof typeof municipiosPorEstado]) {
