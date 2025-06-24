@@ -39,37 +39,53 @@ const CepModal: React.FC<CepModalProps> = ({ isOpen, onClose, onConfirm }) => {
   const [countryConfig, setCountryConfig] = useState<CountryConfig | null>(null);
   const [isDetectingLocation, setIsDetectingLocation] = useState(true);
 
-  // Detect user location on modal open and test API
+  // Detect user location on modal open with faster timeout
   useEffect(() => {
     if (isOpen && !userLocation) {
       setIsDetectingLocation(true);
+      
+      // Set a maximum timeout for location detection
+      const locationTimeout = setTimeout(() => {
+        setIsDetectingLocation(false);
+        // Set default Chile configuration if detection fails
+        setUserLocation({
+          countryCode: 'CL',
+          country: 'Chile'
+        });
+        setCountryConfig({
+          iso: 'CL',
+          name: 'Chile',
+          postalCodeFormat: '7 dígitos',
+          placeholder: '7500000',
+          maxLength: 7
+        });
+      }, 3000);
+
       geolocationService.detectLocation()
         .then((location) => {
+          clearTimeout(locationTimeout);
           if (location) {
             setUserLocation(location);
             const config = geolocationService.getCurrentCountryConfig();
             setCountryConfig(config);
             console.log(`País detectado: ${location.countryCode} (${location.country})`);
-            
-            // Test Zipcodebase API connection for non-Brazil countries
-            if (location.countryCode !== 'BR') {
-              zipcodebaseService.testApiConnection().then((result) => {
-                console.log(`Zipcodebase API status: ${result.message}`);
-              });
-              
-              // Test Mexico postal code specifically
-              zipcodebaseService.validatePostalCode('06000', 'MX').then((result) => {
-                if (result?.isValid) {
-                  console.log(`🇲🇽 Teste México: ${result.city}, ${result.state} - Sucesso!`);
-                } else {
-                  console.log('🇲🇽 Teste México: Falhou na validação');
-                }
-              });
-            }
           }
         })
         .catch((error) => {
+          clearTimeout(locationTimeout);
           console.error('Error detecting location:', error);
+          // Fallback to Chile
+          setUserLocation({
+            countryCode: 'CL',
+            country: 'Chile'
+          });
+          setCountryConfig({
+            iso: 'CL',
+            name: 'Chile',
+            postalCodeFormat: '7 dígitos',
+            placeholder: '7500000',
+            maxLength: 7
+          });
         })
         .finally(() => {
           setIsDetectingLocation(false);

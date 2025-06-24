@@ -95,6 +95,16 @@ The project supports multiple deployment strategies:
 
 ## Recent Changes
 
+- June 24, 2025: Fixed infinite loading issue in postal code modal
+  - Implemented proper timeout handling (3-second limit) for location detection
+  - Added fallback mechanisms to prevent API dependency failures
+  - Simplified postal code validation for reliable international support
+  - Enhanced user experience with immediate postal code acceptance and progression
+- June 24, 2025: Enhanced municipality selection with premium earnings calculator
+  - Added "Seleccionar/Desmarcar Todos" button for easier municipality selection
+  - Implemented realistic earnings projections capped at $600 USD daily maximum
+  - Created premium gradient layout with professional typography and color scheme
+  - Optimized text presentation and removed gamification elements for corporate appearance
 - June 24, 2025: Updated Municipios page background from yellow to white for cleaner UI
 - June 24, 2025: Successfully debugged and fixed Municipios page blank screen issue
   - Fixed missing PageTitle import causing component render errors
