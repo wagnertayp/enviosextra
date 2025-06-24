@@ -381,9 +381,27 @@ const Municipios: React.FC = () => {
                   <h2 className="text-lg font-semibold text-gray-700">
                     Centros de Distribución ({nearbyMunicipalities.length})
                   </h2>
-                  <span className="text-sm text-gray-500">
-                    Ordenado por proximidad
-                  </span>
+                  <div className="flex items-center gap-3">
+                    <span className="text-sm text-gray-500">
+                      Ordenado por proximidad
+                    </span>
+                    <Button
+                      type="button"
+                      onClick={() => {
+                        const allSelected = nearbyMunicipalities.every(m => selectedMunicipios.includes(m.city));
+                        if (allSelected) {
+                          setSelectedMunicipios([]);
+                        } else {
+                          setSelectedMunicipios(nearbyMunicipalities.map(m => m.city));
+                        }
+                      }}
+                      variant="outline"
+                      size="sm"
+                      className="text-xs px-3 py-1 h-8"
+                    >
+                      {nearbyMunicipalities.every(m => selectedMunicipios.includes(m.city)) ? 'Desmarcar' : 'Seleccionar'} Todos
+                    </Button>
+                  </div>
                 </div>
                 
                 <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 max-h-96 overflow-y-auto">
@@ -446,19 +464,59 @@ const Municipios: React.FC = () => {
               </Card>
 
               {selectedMunicipios.length > 0 && (
-                <Card className="p-4 bg-white border border-gray-200 mb-6">
-                  <div className="space-y-3">
-                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
-                      <span className="font-medium text-gray-900">
-                        {selectedMunicipios.length} centro{selectedMunicipios.length > 1 ? 's' : ''} seleccionado{selectedMunicipios.length > 1 ? 's' : ''}
-                      </span>
-                      <div className="text-sm text-gray-600 space-y-1 sm:space-y-0 sm:text-right">
-                        <div>Entregas estimadas: {selectedMunicipios.length * 8}-{selectedMunicipios.length * 15}/día</div>
-                        <div>Ingresos: ${(selectedMunicipios.length * 8 * 12).toFixed(0)}-${(selectedMunicipios.length * 15 * 12).toFixed(0)} USD/día</div>
+                <Card className="p-6 bg-gradient-to-br from-slate-50 to-gray-50 border border-slate-200 mb-6 shadow-sm">
+                  <div className="space-y-5">
+                    {/* Header */}
+                    <div className="flex items-center justify-between">
+                      <h3 className="text-lg font-semibold text-slate-900">
+                        Proyección de Ingresos
+                      </h3>
+                      <div className="bg-slate-800 text-white px-3 py-1 rounded-full text-sm font-medium">
+                        {selectedMunicipios.length} centro{selectedMunicipios.length > 1 ? 's' : ''} activo{selectedMunicipios.length > 1 ? 's' : ''}
                       </div>
                     </div>
-                    <div className="text-sm text-gray-600 pt-2 border-t border-gray-100">
-                      Mercado Libre paga $12 USD por entrega completada. Pagos semanales.
+
+                    {/* Main metrics */}
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="bg-white p-4 rounded-lg border border-slate-200">
+                        <div className="text-2xl font-bold text-slate-900 mb-1">
+                          {Math.min(selectedMunicipios.length * 12, 50)}
+                        </div>
+                        <div className="text-sm text-slate-600">Entregas diarias estimadas</div>
+                      </div>
+                      
+                      <div className="bg-white p-4 rounded-lg border border-slate-200">
+                        <div className="text-2xl font-bold text-emerald-600 mb-1">
+                          ${Math.min(selectedMunicipios.length * 12 * 12, 600)}
+                        </div>
+                        <div className="text-sm text-slate-600">Ingresos diarios USD</div>
+                      </div>
+                    </div>
+
+                    {/* Income breakdown */}
+                    <div className="bg-white p-4 rounded-lg border border-slate-200">
+                      <div className="text-sm text-slate-700 space-y-2">
+                        <div className="flex justify-between items-center">
+                          <span>Tarifa por entrega:</span>
+                          <span className="font-semibold">$12 USD</span>
+                        </div>
+                        <div className="flex justify-between items-center">
+                          <span>Ingresos semanales:</span>
+                          <span className="font-semibold text-emerald-600">${(Math.min(selectedMunicipios.length * 12 * 12, 600) * 7).toLocaleString()} USD</span>
+                        </div>
+                        <div className="flex justify-between items-center">
+                          <span>Ingresos mensuales:</span>
+                          <span className="font-semibold text-emerald-600">${(Math.min(selectedMunicipios.length * 12 * 12, 600) * 30).toLocaleString()} USD</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Payment info */}
+                    <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                      <div className="text-sm text-blue-800">
+                        <div className="font-medium mb-1">Sistema de Pagos Mercado Libre</div>
+                        <div>Transferencias semanales directas a tu cuenta bancaria. Sin comisiones ocultas.</div>
+                      </div>
                     </div>
                   </div>
                 </Card>
