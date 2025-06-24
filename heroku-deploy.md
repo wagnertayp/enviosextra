@@ -6,11 +6,11 @@
 
 Todos os arquivos necessários já estão configurados:
 
-- `Procfile`: Define o comando de inicialização
+- `Procfile`: Define o comando de inicialização (`web: npm start`)
 - `app.json`: Configuração completa do app com PostgreSQL
-- `runtime.txt`: Especifica Node.js 20.x
-- `.gitignore`: Exclusão de arquivos desnecessários
-- `package.json`: Scripts otimizados para produção
+- `.nvmrc`: Especifica Node.js 20 para detecção correta
+- `.gitignore`: Exclusão de arquivos Python e desnecessários
+- `package.json`: Scripts otimizados para produção Node.js
 
 ### 2. Processo de Deploy
 
@@ -43,10 +43,11 @@ Use o botão "Deploy to Heroku" com o arquivo `app.json` configurado.
 ### 3. Recursos Configurados
 
 - **PostgreSQL**: Banco de dados Neon integrado
-- **Node.js 20.x**: Runtime especificado
+- **Node.js 20**: Runtime especificado via .nvmrc
 - **Build automático**: Vite + ESBuild configurados
 - **Migração automática**: `npm run db:push` no post-deploy
 - **Variáveis opcionais**: APIs funcionam com dados demo se não configuradas
+- **Arquivos Python removidos**: Evita conflito de detecção de linguagem
 
 ### 4. URLs do App
 
@@ -77,5 +78,14 @@ O Heroku fornece automaticamente:
 ✅ **CORS configurado**: Permite acesso de múltiplas origens
 ✅ **Compressão ativada**: Gzip para melhor performance
 ✅ **Logs estruturados**: Sistema de logging completo
+✅ **Node.js detectado**: Arquivos Python removidos, .nvmrc configurado
+✅ **Heroku-22 stack**: Stack atualizada para melhor compatibilidade
 
-O projeto está 100% pronto para deploy no Heroku.
+## Problemas Resolvidos
+
+❌ **runtime.txt removido**: Causava conflito de detecção Python/Node.js
+❌ **Arquivos .py movidos**: Evita detecção incorreta como app Python
+✅ **.nvmrc adicionado**: Garante detecção correta do Node.js 20
+✅ **Stack atualizada**: heroku-22 para melhor suporte
+
+O projeto está 100% pronto para deploy no Heroku com detecção correta do Node.js.
