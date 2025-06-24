@@ -4,7 +4,7 @@
   "repository": "https://github.com/mercadolibre/delivery-partners",
   "logo": "https://logoeps.com/wp-content/uploads/2013/03/mercado-libre-vector-logo.png",
   "keywords": ["delivery", "mercado-libre", "recruitment", "partners"],
-  "stack": "heroku-20",
+  "stack": "heroku-22",
   "buildpacks": [
     {
       "url": "heroku/nodejs"

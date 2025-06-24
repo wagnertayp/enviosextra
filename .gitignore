@@ -88,3 +88,11 @@ jspm_packages/
 # Temporary folders
 tmp/
 temp/
+
+# Python files (not needed for deployment)
+*.py
+*.pyc
+__pycache__/
+requirements.txt
+pyproject.toml
+uv.lock
