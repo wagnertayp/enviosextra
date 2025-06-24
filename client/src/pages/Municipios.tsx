@@ -446,14 +446,57 @@ const Municipios: React.FC = () => {
               </Card>
 
               {selectedMunicipios.length > 0 && (
-                <Card className="p-4 bg-green-50 border-green-200 mb-6">
-                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
-                    <span className="text-green-800 font-medium">
-                      Centros seleccionados: {selectedMunicipios.length}
-                    </span>
-                    <span className="text-green-800 text-sm">
-                      Entregas estimadas: {selectedMunicipios.length * 35}-{selectedMunicipios.length * 48}/día
-                    </span>
+                <Card className="p-6 bg-gradient-to-r from-gray-50 to-gray-100 border-gray-200 mb-6 shadow-sm">
+                  <div className="space-y-4">
+                    {/* Header */}
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 bg-[#3483FA] rounded-full flex items-center justify-center">
+                          <i className="fas fa-check text-white text-sm"></i>
+                        </div>
+                        <div>
+                          <h3 className="font-semibold text-gray-900">Centros Seleccionados</h3>
+                          <p className="text-sm text-gray-600">{selectedMunicipios.length} centro{selectedMunicipios.length > 1 ? 's' : ''} de distribución</p>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Stats Grid */}
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                      <div className="bg-white p-4 rounded-lg border border-gray-200">
+                        <div className="text-center">
+                          <div className="text-2xl font-bold text-[#3483FA]">{selectedMunicipios.length * 8}-{selectedMunicipios.length * 15}</div>
+                          <div className="text-sm text-gray-600">entregas/día</div>
+                        </div>
+                      </div>
+                      
+                      <div className="bg-white p-4 rounded-lg border border-gray-200">
+                        <div className="text-center">
+                          <div className="text-2xl font-bold text-green-600">${(selectedMunicipios.length * 8 * 12).toFixed(0)}-${(selectedMunicipios.length * 15 * 12).toFixed(0)}</div>
+                          <div className="text-sm text-gray-600">ingresos/día</div>
+                        </div>
+                      </div>
+                      
+                      <div className="bg-white p-4 rounded-lg border border-gray-200">
+                        <div className="text-center">
+                          <div className="text-2xl font-bold text-blue-600">$12</div>
+                          <div className="text-sm text-gray-600">USD por entrega</div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Payment Info */}
+                    <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                      <div className="flex items-start gap-3">
+                        <div className="w-5 h-5 bg-blue-500 rounded-full flex items-center justify-center mt-0.5">
+                          <i className="fas fa-dollar-sign text-white text-xs"></i>
+                        </div>
+                        <div className="text-sm text-blue-800">
+                          <p className="font-medium mb-1">Sistema de Pagos Mercado Libre</p>
+                          <p>Recibe <span className="font-semibold">$12 USD por cada entrega completada</span>. Pagos semanales directos a tu cuenta bancaria.</p>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </Card>
               )}
