@@ -314,22 +314,29 @@ const Municipios: React.FC = () => {
     );
   }
 
-  // Render new API-based UI when we have nearby municipalities
-  if (nearbyMunicipalities.length > 0) {
-    return (
-      <div className="bg-[#FDE80F] min-h-screen flex flex-col">
-        <Header />
-        <Breadcrumb />
-        
-        <main className="flex-1 py-8">
-          <div className="p-6 max-w-4xl mx-auto">
-            <h1 className="text-2xl font-bold text-gray-800 mb-6 text-center">
-              Seleccionar Municipios Disponibles
-            </h1>
-            
-            <div className="grid gap-6">
-              {/* Informação sobre a região detectada */}
-              <Card className="p-4 bg-blue-50 border-blue-200">
+  // Main UI that works for both API data and static data
+  return (
+    <div className="bg-[#FDE80F] min-h-screen flex flex-col">
+      <Header />
+      <Breadcrumb />
+      <PageTitle title="Seleccionar Municipios" />
+      <div className="container mx-auto px-4 py-8">
+        <div className="max-w-4xl mx-auto">
+          
+          <div className="text-center mb-6">
+            <h1 className="text-2xl font-bold text-gray-800 mb-2">Seleccionar Municipios Disponibles</h1>
+            <p className="text-gray-600">
+              {nearbyMunicipalities.length > 0 
+                ? `Ciudades encontradas cerca de tu código postal (${nearbyMunicipalities.length} disponibles)`
+                : 'Elige las zonas donde te gustaría realizar entregas'
+              }
+            </p>
+          </div>
+
+          {/* Show API-based municipalities if available */}
+          {nearbyMunicipalities.length > 0 && (
+            <>
+              <Card className="p-4 bg-blue-50 border-blue-200 mb-6">
                 <div className="flex items-center space-x-2 text-blue-800">
                   <i className="fas fa-map-marker-alt"></i>
                   <span className="font-medium">
@@ -341,8 +348,7 @@ const Municipios: React.FC = () => {
                 </p>
               </Card>
 
-              {/* Lista de Municipios da API */}
-              <Card className="p-6">
+              <Card className="p-6 mb-6">
                 <div className="flex items-center justify-between mb-4">
                   <h2 className="text-lg font-semibold text-gray-700">
                     Seleccionar Municipios ({nearbyMunicipalities.length})
@@ -353,7 +359,7 @@ const Municipios: React.FC = () => {
                 </div>
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 max-h-96 overflow-y-auto">
-                  {nearbyMunicipalities.length > 0 ? nearbyMunicipalities.map((municipality, index) => (
+                  {nearbyMunicipalities.map((municipality, index) => (
                     <div key={`${municipality.city}-${index}`} className="flex items-center space-x-2 p-3 hover:bg-gray-50 rounded border">
                       <Checkbox
                         id={`municipio-${municipality.city}-${index}`}
@@ -388,17 +394,12 @@ const Municipios: React.FC = () => {
                         </div>
                       </div>
                     </div>
-                  )) : (
-                    <div className="col-span-full text-center text-gray-500 py-8">
-                      <p>Cargando ciudades próximas...</p>
-                    </div>
-                  )}
+                  ))}
                 </div>
               </Card>
 
-              {/* Summary of selected municipalities */}
               {selectedMunicipios.length > 0 && (
-                <Card className="p-4 bg-green-50 border-green-200">
+                <Card className="p-4 bg-green-50 border-green-200 mb-6">
                   <div className="flex items-center justify-between">
                     <span className="text-green-800 font-medium">
                       Municipios seleccionados: {selectedMunicipios.length}
@@ -410,7 +411,6 @@ const Municipios: React.FC = () => {
                 </Card>
               )}
 
-              {/* Botões de ação */}
               <div className="flex justify-between">
                 <Button
                   variant="outline"
@@ -428,16 +428,17 @@ const Municipios: React.FC = () => {
                   {submitting ? 'Procesando...' : 'Continuar'}
                 </Button>
               </div>
-            </div>
-          </div>
-        </main>
+            </>
+          )}
         
         <Footer />
         
         {/* Modal de carregamento */}
         <LoadingModal
           isOpen={showLoadingModal}
-          steps={[
+          onComplete={handleLoadingComplete}
+          title="Procesando Selección"
+          loadingSteps={[
             "Validando municipios seleccionados",
             "Calculando rutas de entrega",
             "Analizando demanda regional",
@@ -445,7 +446,6 @@ const Municipios: React.FC = () => {
           ]}
           completionMessage="¡Municipios registrados con éxito!"
           loadingTime={12000}
-          onComplete={handleLoadingComplete}
         />
         
         {/* Modal de seleção de data de início */}
@@ -506,11 +506,202 @@ const Municipios: React.FC = () => {
             </div>
           </DialogContent>
         </Dialog>
+        
+        {/* Standard Brazilian municipalities grid - only show when not using API data */}
+        {nearbyMunicipalities.length === 0 && (
+          <>
+            <div className="mb-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+              <h2 className="text-lg sm:text-xl font-semibold text-gray-800">
+                Marcar Municipios:
+              </h2>
+              <Button
+                type="button"
+                onClick={toggleAllMunicipios}
+                variant="outline"
+                className="bg-gray-50 hover:bg-gray-100 text-gray-700 border-gray-300 text-sm font-medium px-4 py-2"
+              >
+                {municipios.every(m => m.selecionado) ? 'Desmarcar Todos' : 'Marcar Todos'}
+              </Button>
+            </div>
+            
+            <div className="border rounded-[3px] overflow-hidden p-4 relative">
+              <div className="max-h-[500px] overflow-y-auto custom-scrollbar">
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4">
+                  {municipios.map((municipio, index) => (
+                    <div 
+                      key={index} 
+                      className={`p-2 sm:p-4 border rounded-[3px] cursor-pointer hover:bg-gray-50 transition-colors ${
+                        municipio.selecionado ? 'border-[#3483FA] bg-[#F0F7FF]' : 'border-gray-200'
+                      }`}
+                      onClick={() => toggleMunicipio(index)}
+                    >
+                      <div className="flex items-center justify-between">
+                        <div className="flex-1 min-w-0">
+                          <span className="text-xs sm:text-sm font-medium text-gray-700 truncate block">
+                            {municipio.nome}
+                          </span>
+                          {municipio.distance !== undefined && (
+                            <span className="text-xs text-blue-600 bg-blue-100 px-1 py-0.5 rounded mt-1 inline-block">
+                              {municipio.distance.toFixed(1)} km
+                            </span>
+                          )}
+                        </div>
+                        <Checkbox
+                          checked={municipio.selecionado}
+                          onCheckedChange={() => toggleMunicipio(index)}
+                          className="h-4 w-4 sm:h-5 sm:w-5 border-gray-300 rounded data-[state=checked]:bg-[#3483FA] data-[state=checked]:text-white ml-2"
+                        />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+            
+            {/* Estatísticas de entregas */}
+            {municipios.filter(m => m.selecionado).length > 0 && (
+              <Card className="mt-6 mb-6 p-4 border border-[#3483FA40] bg-[#F0F7FF]">
+                <div className="flex flex-col">
+                  <h3 className="font-medium text-gray-800 mb-2">Previsión de Entregas</h3>
+                  <div className="text-sm text-gray-700">
+                    <p>Cantidad promedio diaria de entregas que pueden ser asignadas a ti:</p>
+                    <div className="mt-2 p-3 bg-white rounded-[3px] border border-[#3483FA20]">
+                      <div className="text-center mb-3 bg-[#F0F7FF] p-2 rounded-[3px]">
+                        <span className="font-medium text-[#3483FA]">Mercado Libre paga $12,00 (dólares) por entrega realizada</span>
+                      </div>
+                      
+                      {municipios.filter(m => m.selecionado).map((m, index) => (
+                        <div key={index} className="grid grid-cols-1 md:grid-cols-3 gap-2 mb-2 last:mb-0">
+                          <span className="font-medium md:col-span-1">{m.nome}:</span>
+                          <span className="font-bold text-[#3483FA] md:col-span-1">
+                            {m.entregas} <span className="font-normal text-gray-700">entregas</span>
+                          </span>
+                          <span className="font-medium text-green-600 md:col-span-1">
+                            ${(m.entregas * 12).toFixed(2).replace('.', ',')} <span className="font-normal text-gray-700">/día</span>
+                          </span>
+                        </div>
+                      ))}
+                      
+                      {municipios.filter(m => m.selecionado).length > 1 && (
+                        <div className="mt-3 pt-3 border-t border-[#3483FA20] grid grid-cols-1 md:grid-cols-3 gap-2">
+                          <span className="font-semibold">Total diario:</span>
+                          <span className="font-bold text-[#3483FA]">
+                            {municipios
+                              .filter(m => m.selecionado)
+                              .reduce((acc, m) => acc + m.entregas, 0)} <span className="font-normal text-gray-700">entregas</span>
+                          </span>
+                          <span className="font-semibold text-green-600">
+                            ${(municipios
+                              .filter(m => m.selecionado)
+                              .reduce((acc, m) => acc + m.entregas, 0) * 12).toFixed(2).replace('.', ',')} <span className="font-normal text-gray-700">/día</span>
+                          </span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </Card>
+            )}
+            
+            <div className="mt-6">
+              <Button
+                type="button"
+                onClick={handleSubmit}
+                className="w-full bg-[#3483FA] hover:bg-[#2968D7] text-white font-medium py-6 text-base rounded-[3px]"
+                disabled={submitting}
+                style={{ height: '50px' }}
+              >
+                {submitting ? 'Procesando...' : 'Continuar'}
+              </Button>
+            </div>
+          </>
+        )}
       </div>
-    );
-  }
+      <Footer />
+      <LoadingModal
+        isOpen={showLoadingModal}
+        onComplete={handleLoadingComplete}
+        title="Procesando Selección"
+        loadingSteps={[
+          "Verificando municipios seleccionados",
+          "Calculando rutas de entrega",
+          "Analizando demanda regional",
+          "Verificando disponibilidad de vacantes"
+        ]}
+        completionMessage="¡Municipios registrados con éxito!"
+        loadingTime={12000}
+      />
+      {/* Modal de seleção de data de início */}
+      <Dialog open={showStartDateModal} onOpenChange={setShowStartDateModal}>
+        <DialogContent className="p-0 sm:max-w-none w-full h-full max-h-screen overflow-hidden border-none shadow-none bg-white">
+          <div className="absolute top-0 left-0 w-full h-full bg-[#FDE80F] z-0"></div>
+          
+          <div className="relative flex flex-col justify-center items-center h-screen bg-transparent z-10 p-6 max-w-md mx-auto">
+            {/* Mercado Libre Logo - positioned at top */}
+            <div className="mb-6">
+              <img 
+                src="https://i.postimg.cc/j5Mnz0Tm/mercadolibre-logo-7-D54-D946-AE-seeklogo-com.png" 
+                alt="Mercado Libre"
+                className="h-14 w-auto object-contain"
+              />
+            </div>
+            
+            <h2 className="text-2xl font-bold text-[#3483FA] text-center mb-4">
+              <i className="fas fa-exclamation-circle mr-2"></i>
+              ¡Atención! Oportunidad de Trabajo
+            </h2>
+            
+            <DialogDescription className="text-base text-center text-gray-700 py-3 mb-4 bg-[#F0F7FF] rounded-lg border border-[#3483FA20] p-4">
+              En la región que elegiste, tenemos <span className="font-bold text-[#3483FA]">URGENTE</span> necesidad
+              de nuevos repartidores, ya que la demanda de entregas está alta y tenemos pocos repartidores registrados.
+            </DialogDescription>
+            
+            <div className="my-6 w-full">
+              <h3 className="font-medium text-gray-800 mb-4 text-center text-lg">¿Cuándo puedes empezar?</h3>
+              
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mt-5">
+                {getNextThreeDays().map((date, index) => (
+                  <Button
+                    key={index}
+                    type="button"
+                    variant={selectedStartDate === date.value ? "default" : "outline"}
+                    onClick={() => handleStartDateSelection(date.value)}
+                    className={`py-4 px-2 h-auto text-base ${selectedStartDate === date.value ? 'bg-[#3483FA] hover:bg-[#2968D7] border-[#3483FA] shadow-md' : 'border-gray-300 hover:border-[#3483FA] hover:text-[#3483FA]'}`}
+                  >
+                    {date.full}
+                  </Button>
+                ))}
+              </div>
+              
+              <Button
+                type="button"
+                variant={selectedStartDate === 'outro' ? "default" : "outline"}
+                onClick={() => handleStartDateSelection('outro')}
+                className={`w-full mt-4 py-4 h-auto text-base ${selectedStartDate === 'outro' ? 'bg-[#3483FA] hover:bg-[#2968D7] border-[#3483FA] shadow-md' : 'border-gray-300 hover:border-[#3483FA] hover:text-[#3483FA]'}`}
+              >
+                Otro día
+              </Button>
+            </div>
+            
+            <div className="mt-6 w-full">
+              <Button 
+                type="button" 
+                onClick={handleStartDateContinue}
+                className="w-full bg-[#3483FA] hover:bg-[#2968D7] text-white font-medium text-lg py-6" 
+                style={{ height: '60px' }}
+                disabled={!selectedStartDate}
+              >
+                Continuar
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+    </div>
+  );
+};
 
-  return (
+export default Municipios;
     <div className="bg-white min-h-screen flex flex-col">
       <Header />
       <Breadcrumb />
