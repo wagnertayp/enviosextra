@@ -41,6 +41,9 @@ export async function setupVite(app: Express, server: Server) {
   });
 
   app.use(vite.middlewares);
+  // Configure Vite dev server port
+  const vitePort = Number(process.env.VITE_PORT) || 3000;
+
   app.use("*", async (req, res, next) => {
     const url = req.originalUrl;
 

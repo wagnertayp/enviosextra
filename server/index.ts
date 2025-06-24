@@ -202,15 +202,16 @@ app.use((req, res, next) => {
       serveStatic(app);
     }
 
-    // Usa a porta fornecida pelo ambiente (Heroku) ou 5000 como fallback
-    const port = process.env.PORT || 5000;
-    const host = '0.0.0.0'; // Bind to all interfaces for Heroku
+    // Usa a porta fornecida pelo ambiente ou 5000 como fallback
+    const port = Number(process.env.PORT) || 5000;
+    const host = process.env.HOST || '0.0.0.0';
+    
     server.listen({
-      port: Number(port),
-      host: "0.0.0.0",
+      port,
+      host,
       reusePort: true,
     }, () => {
-      log(`serving on port ${port}`);
+      log(`serving on ${host}:${port}`);
     });
   } catch (error) {
     console.error('[SERVER] Failed to start server:', error);
