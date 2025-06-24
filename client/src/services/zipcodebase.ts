@@ -42,8 +42,8 @@ export class ZipcodebaseService {
   private apiKey: string | null = null;
 
   private constructor() {
-    // Try to get API key from environment variables
-    this.apiKey = import.meta.env.VITE_ZIPCODEBASE_API_KEY || null;
+    // Use hardcoded API key for development (as provided in GeolocationService)
+    this.apiKey = 'fc9584d0-4f0a-11f0-9a26-9f6dbeaee456';
   }
 
   public static getInstance(): ZipcodebaseService {
@@ -82,12 +82,18 @@ export class ZipcodebaseService {
       
       console.log(`Validating postal code ${cleanedCode} for country ${countryCode}`);
       
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 8000); // 8 second timeout
+      
       const response = await fetch(url, {
         method: 'GET',
         headers: {
           'Accept': 'application/json',
-        }
+        },
+        signal: controller.signal
       });
+      
+      clearTimeout(timeoutId);
 
       if (!response.ok) {
         throw new Error(`API request failed with status ${response.status}`);
@@ -125,7 +131,11 @@ export class ZipcodebaseService {
       };
 
     } catch (error) {
-      console.error('Error validating postal code with Zipcodebase:', error);
+      if (error.name === 'AbortError') {
+        console.log('Zipcodebase API request timed out');
+      } else {
+        console.error('Error validating postal code with Zipcodebase:', error);
+      }
       return null;
     }
   }
