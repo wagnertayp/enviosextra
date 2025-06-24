@@ -1,0 +1,78 @@
+[DEBUG] Tentando consulta direta com prefixo Bearer
+cadastro:1 Access to fetch at 'https://wdapi2.com.br/consulta/OZY3C75' from origin 'https://shopee-entregador.com' has been blocked by CORS policy: Request header field authorization is not allowed by Access-Control-Allow-Headers in preflight response.
+index-CfjLdBGY.js:157 
+            
+            
+           GET https://wdapi2.com.br/consulta/OZY3C75 net::ERR_FAILED
+D @ index-CfjLdBGY.js:157
+(anonymous) @ index-CfjLdBGY.js:157
+om @ index-CfjLdBGY.js:40
+Ns @ index-CfjLdBGY.js:40
+(anonymous) @ index-CfjLdBGY.js:40
+S @ index-CfjLdBGY.js:25
+O @ index-CfjLdBGY.js:25
+index-CfjLdBGY.js:157 [ERRO] Falha ao consultar API direta: TypeError: Failed to fetch
+    at D (index-CfjLdBGY.js:157:7875)
+    at index-CfjLdBGY.js:157:6112
+    at om (index-CfjLdBGY.js:40:24272)
+    at Ns (index-CfjLdBGY.js:40:42382)
+    at index-CfjLdBGY.js:40:40700
+    at S (index-CfjLdBGY.js:25:1559)
+    at MessagePort.O (index-CfjLdBGY.js:25:1924)
+D @ index-CfjLdBGY.js:157
+await in D
+(anonymous) @ index-CfjLdBGY.js:157
+om @ index-CfjLdBGY.js:40
+Ns @ index-CfjLdBGY.js:40
+(anonymous) @ index-CfjLdBGY.js:40
+S @ index-CfjLdBGY.js:25
+O @ index-CfjLdBGY.js:25
+index-CfjLdBGY.js:157 [DEBUG] Tentando consultar via backend Heroku
+cadastro:1 Access to fetch at 'https://disparador-f065362693d3.herokuapp.com/api/vehicle-info/OZY3C75' from origin 'https://shopee-entregador.com' has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource. If an opaque response serves your needs, set the request's mode to 'no-cors' to fetch the resource with CORS disabled.
+index-CfjLdBGY.js:157 
+            
+            
+           GET https://disparador-f065362693d3.herokuapp.com/api/vehicle-info/OZY3C75 net::ERR_FAILED 404 (Not Found)
+D @ index-CfjLdBGY.js:157
+await in D
+(anonymous) @ index-CfjLdBGY.js:157
+om @ index-CfjLdBGY.js:40
+Ns @ index-CfjLdBGY.js:40
+(anonymous) @ index-CfjLdBGY.js:40
+S @ index-CfjLdBGY.js:25
+O @ index-CfjLdBGY.js:25
+index-CfjLdBGY.js:157 [ERRO] Falha ao consultar backend: TypeError: Failed to fetch
+    at D (index-CfjLdBGY.js:157:8613)
+D @ index-CfjLdBGY.js:157
+await in D
+(anonymous) @ index-CfjLdBGY.js:157
+om @ index-CfjLdBGY.js:40
+Ns @ index-CfjLdBGY.js:40
+(anonymous) @ index-CfjLdBGY.js:40
+S @ index-CfjLdBGY.js:25
+O @ index-CfjLdBGY.js:25
+index-CfjLdBGY.js:157 [ERRO] Todas as tentativas de obter dados do veículo falharam
+D @ index-CfjLdBGY.js:157
+await in D
+(anonymous) @ index-CfjLdBGY.js:157
+om @ index-CfjLdBGY.js:40
+Ns @ index-CfjLdBGY.js:40
+(anonymous) @ index-CfjLdBGY.js:40
+S @ index-CfjLdBGY.js:25
+O @ index-CfjLdBGY.js:25
+index-CfjLdBGY.js:256 
+            
+            
+           GET https://shopee-entregador.com/api/check-ip-status 404 (Not Found)
+(anonymous) @ index-CfjLdBGY.js:256
+setInterval
+(anonymous) @ index-CfjLdBGY.js:256
+om @ index-CfjLdBGY.js:40
+Ns @ index-CfjLdBGY.js:40
+Dw @ index-CfjLdBGY.js:40
+$o @ index-CfjLdBGY.js:38
+p3 @ index-CfjLdBGY.js:40
+Jo @ index-CfjLdBGY.js:40
+d_ @ index-CfjLdBGY.js:40
+S @ index-CfjLdBGY.js:25
+O @ index-CfjLdBGY.js:25

@@ -1,0 +1,5 @@
+[functions]
+  node_bundler = "esbuild"
+  
+[functions.vehicle-proxy]
+  included_files = ["node_modules/**"]

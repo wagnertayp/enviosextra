@@ -1,0 +1,141 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopee Delivery Partners</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+        .bg-shopee {
+            background-color: #EE4D2D;
+        }
+        .text-shopee {
+            color: #EE4D2D;
+        }
+        
+        @keyframes bounce {
+            0%, 80%, 100% { transform: scale(0); }
+            40% { transform: scale(1.0); }
+        }
+        
+        .loading-dot {
+            animation: bounce 1.4s infinite ease-in-out both;
+        }
+        
+        .loading-dot:nth-child(1) {
+            animation-delay: -0.32s;
+        }
+        
+        .loading-dot:nth-child(2) {
+            animation-delay: -0.16s;
+        }
+
+        .status-item {
+            transition: all 0.3s ease;
+            opacity: 0.5;
+            transform: translateY(10px);
+        }
+
+        .status-item.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .status-item.active .status-icon {
+            background-color: #EE4D2D;
+            color: white;
+        }
+
+        .status-item.active .status-text {
+            color: #EE4D2D;
+            font-weight: bold;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0.5;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'custom-orange': '#F24A2C',
+                        'light-gray': '#d3d3d3',
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-white h-screen">
+    <!-- Fullscreen Background -->
+    <div class="absolute top-0 left-0 w-full h-full bg-white z-0"></div>
+
+    <!-- Loading Indicator and Status -->
+    <div class="relative flex flex-col justify-center items-center h-[80vh] bg-transparent z-10">
+        <!-- Loader -->
+        <div class="flex space-x-2 mb-8 fixed top-1/4">
+            <div class="loading-dot w-3 h-3 bg-red-500 rounded-full"></div>
+            <div class="loading-dot w-3 h-3 bg-red-500 rounded-full"></div>
+            <div class="loading-dot w-3 h-3 bg-red-500 rounded-full"></div>
+        </div>
+
+        <!-- Status Modal -->
+        <div class="w-11/12 max-w-md mt-48">
+            <div class="space-y-3">
+                <div id="status1" class="status-item flex items-center p-2 bg-gray-100 rounded-lg">
+                    <div class="status-icon bg-custom-orange text-white rounded-full w-8 h-8 flex items-center justify-center mr-3">
+                        <i class="fas fa-check text-sm"></i>
+                    </div>
+                    <div class="status-text text-gray-600 text-sm">Lorem ipsum dolor sit amet</div>
+                </div>
+                <div id="status2" class="status-item flex items-center p-2 bg-gray-100 rounded-lg">
+                    <div class="status-icon bg-custom-orange text-white rounded-full w-8 h-8 flex items-center justify-center mr-3">
+                        <i class="fas fa-check text-sm"></i>
+                    </div>
+                    <div class="status-text text-gray-600 text-sm">Consectetur adipiscing elit</div>
+                </div>
+                <div id="status3" class="status-item flex items-center p-2 bg-gray-100 rounded-lg">
+                    <div class="status-icon bg-custom-orange text-white rounded-full w-8 h-8 flex items-center justify-center mr-3">
+                        <i class="fas fa-check text-sm"></i>
+                    </div>
+                    <div class="status-text text-gray-600 text-sm">Sed do eiusmod tempor incididunt</div>
+                </div>
+                <div id="status4" class="status-item flex items-center p-2 bg-gray-100 rounded-lg">
+                    <div class="status-icon bg-custom-orange text-white rounded-full w-8 h-8 flex items-center justify-center mr-3">
+                        <i class="fas fa-check text-sm"></i>
+                    </div>
+                    <div class="status-text text-gray-600 text-sm">Ut labore et dolore magna aliqua</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function activateStatus(id, delay) {
+            setTimeout(() => {
+                const status = document.getElementById(id);
+                status.classList.add('active');
+                status.style.animation = 'fadeInUp 0.5s ease-out forwards';
+            }, delay);
+        }
+
+        activateStatus('status1', 3000);
+        activateStatus('status2', 6000);
+        activateStatus('status3', 9000);
+        activateStatus('status4', 12000);
+    </script>
+</body>
+</html>

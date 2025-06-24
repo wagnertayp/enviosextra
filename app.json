@@ -1,0 +1,45 @@
+{
+  "name": "mercado-libre-delivery-partners",
+  "description": "Plataforma de recrutamento para parceiros entregadores do Mercado Libre",
+  "repository": "https://github.com/mercadolibre/delivery-partners",
+  "logo": "https://logoeps.com/wp-content/uploads/2013/03/mercado-libre-vector-logo.png",
+  "keywords": ["delivery", "mercado-libre", "recruitment", "partners"],
+  "stack": "heroku-20",
+  "buildpacks": [
+    {
+      "url": "heroku/nodejs"
+    }
+  ],
+  "formation": {
+    "web": {
+      "quantity": 1,
+      "size": "basic"
+    }
+  },
+  "addons": [
+    {
+      "plan": "heroku-postgresql:essential-0"
+    }
+  ],
+  "env": {
+    "NODE_ENV": {
+      "description": "Environment setting",
+      "value": "production"
+    },
+    "FOR4PAYMENTS_SECRET_KEY": {
+      "description": "Chave secreta da API For4Payments para processamento de pagamentos PIX",
+      "required": false
+    },
+    "VEHICLE_API_KEY": {
+      "description": "Chave da API WDAPI2 para consulta de informações de veículos",
+      "required": false
+    },
+    "SENDGRID_API_KEY": {
+      "description": "Chave da API SendGrid para envio de emails",
+      "required": false
+    }
+  },
+  "scripts": {
+    "postdeploy": "npm run db:push"
+  }
+}

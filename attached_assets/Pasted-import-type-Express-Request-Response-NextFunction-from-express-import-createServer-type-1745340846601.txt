@@ -1,0 +1,312 @@
+import type { Express, Request, Response, NextFunction } from "express";
+import { createServer, type Server } from "http";
+import { storage } from "./storage";
+import { createPayment } from "./payment";
+import axios from "axios";
+import MobileDetect from "mobile-detect";
+import { insertBannedIpSchema } from "@shared/schema";
+
+// Lista de IPs que nunca devem ser banidos automaticamente
+// Estes IPs podem acessar o site mesmo de desktop sem serem banidos
+const neverBanIPs = [
+  "201.87.251.", // IP mencionado nos logs como banido incorretamente
+  "191.247.4.",  // IP mencionado nos logs como banido incorretamente
+  "127.0.0.1",   // Localhost
+  "::1"          // Localhost IPv6
+];
+
+// Armazenamento de pagamentos em memória para demonstração
+// Em um ambiente de produção, seria usado um banco de dados
+const paymentStore = new Map<string, { status: string, data: any }>();
+
+// Função para obter localização de um IP usando o ipinfo.io (API gratuita sem necessidade de chave)
+async function getIpLocation(ip: string): Promise<string> {
+  try {
+    // Use um serviço de mock para desenvolvimento local
+    if (ip === "127.0.0.1" || ip === "::1" || ip === "::ffff:127.0.0.1" || ip.startsWith("::ffff:")) {
+      return "Local Development";
+    }
+    
+    // Remover qualquer prefixo IPv6 para IPv4 e limpar múltiplos IPs (em caso de proxy)
+    let cleanIp = ip.replace(/^::ffff:/, '');
+    
+    // Se tivermos múltiplos IPs (comum em headers X-Forwarded-For), pegue apenas o primeiro
+    if (cleanIp.includes(',')) {
+      cleanIp = cleanIp.split(',')[0].trim();
+    }
+    
+    // Para IPs privados ou localhost, não faça a chamada para API externa
+    if (cleanIp === '127.0.0.1' || 
+        cleanIp.startsWith('10.') || 
+        cleanIp.startsWith('192.168.') || 
+        cleanIp.startsWith('172.')) {
+      return "IP Local/Privado";
+    }
+    
+    // Usar a API ipinfo.io (não requer chave para uso básico)
+    const response = await axios.get(`https://ipinfo.io/${cleanIp}/json`);
+    
+    if (response.data) {
+      const locationData = response.data;
+      if (locationData.city && locationData.country) {
+        return `${locationData.city}, ${locationData.region || ''}, ${locationData.country}`;
+      } else if (locationData.country) {
+        return `${locationData.country}`;
+      }
+    }
+    
+    return "Localização não disponível";
+  } catch (error) {
+    console.error("Erro ao obter localização do IP:", error);
+    return "Localização não disponível";
+  }
+}
+
+// Middleware para verificar se o usuário está usando desktop
+async function desktopDetectionMiddleware(req: Request, res: Response, next: NextFunction) {
+  // Ignorar requisições de API, admin e relacionadas a domínios
+  if (req.path.startsWith("/api") || req.path.startsWith("/ips") || req.path.startsWith("/domains")) {
+    return next();
+  }
+  
+  const userAgent = req.headers["user-agent"] || "";
+  const md = new MobileDetect(userAgent);
+  const ip = (req.headers["x-forwarded-for"] as string) || 
+             req.socket.remoteAddress || 
+             "unknown";
+  const referer = req.headers.referer || '';
+  
+  // Verificar se o domínio está na lista de permitidos
+  const host = req.get('host') || '';
+  const domain = host.split(':')[0]; // Remove a porta, se houver
+  
+  // Permitir acesso em ambiente Replit
+  if (domain.includes('replit') || domain.includes('kirk') || domain.includes('-00-')) {
+    console.log(`[DEBUG] Domínio de desenvolvimento Replit detectado: ${domain}. Acesso permitido.`);
+    return next();
+  }
+  
+  // Se o domínio estiver na lista de permitidos e ativo, permitir acesso independente do dispositivo
+  const allowedDomain = await storage.getAllowedDomain(domain);
+  if (allowedDomain && allowedDomain.isActive) {
+    console.log(`[DEBUG] Domínio ${domain} está na lista de permitidos. Acesso permitido.`);
+    return next();
+  }
+  
+  // Verificar se o IP já está banido
+  const bannedIp = await storage.getBannedIp(ip);
+  if (bannedIp && bannedIp.isBanned) {
+    console.log(`[BLOQUEIO] IP ${ip} está banido. Bloqueando acesso.`);
+    // IP já está banido, retornar página em branco com status 403
+    return res.status(403).send(`
+      <html>
+        <head>
+          <title>about:blank</title>
+          <script>
+            window.location.href = "about:blank";
+          </script>
+        </head>
+        <body></body>
+      </html>
+    `);
+  }
+  
+  console.log(`[ACESSO] Host: ${domain}, IP: ${ip}, UserAgent: ${userAgent}`);
+  
+  // Verificar acesso via aplicativo WhatsApp mobile (SEMPRE PERMITIR)
+  if (userAgent.startsWith('WhatsApp/') && !userAgent.includes('WhatsApp Web')) {
+    console.log(`[PERMITIDO] Acesso via aplicativo WhatsApp Mobile: ${userAgent}. Permitindo acesso.`);
+    return next();
+  }
+  
+  // Verificação 1: Permitir apenas links oficiais bit.ly (e não de anúncios)
+  if ((referer.includes('bit.ly/elseve-oficial') || 
+       referer.includes('bit.ly/elseve') || 
+       referer.includes('bitly/elseve')) &&
+      !referer.includes('facebook.com/ads') && 
+      !referer.includes('fb.com/ads') && 
+      !referer.includes('ad.doubleclick')) {
+    console.log(`[PERMITIDO] Acesso via link oficial bit.ly: ${referer}. Permitindo acesso.`);
+    return next();
+  }
+  
+  // Verificação 2: Permitir redirecionamentos WhatsApp não promocionais
+  if (referer.includes('whatsapp') && 
+      !referer.includes('ads') && 
+      !referer.includes('ad.') && 
+      !referer.includes('admanager')) {
+    console.log(`[PERMITIDO] Acesso via WhatsApp: ${referer}. Permitindo acesso.`);
+    return next();
+  }
+  
+  // Verificação 3: Verificar parâmetros UTM para permitir acessos legítimos
+  const utm_source = req.query.utm_source || '';
+  const utm_medium = req.query.utm_medium || '';
+  const utm_campaign = req.query.utm_campaign || '';
+  
+  // Identificar se vem de anúncios pagos
+  const isFromAd = 
+    (typeof utm_source === 'string' && (
+      utm_source.toLowerCase().includes('ad') || 
+      utm_source.toLowerCase().includes('fbads') || 
+      utm_source.toLowerCase().includes('instagram_ad')
+    )) || 
+    (typeof utm_medium === 'string' && (
+      utm_medium.toLowerCase().includes('cpc') || 
+      utm_medium.toLowerCase().includes('paid') || 
+      utm_medium.toLowerCase().includes('ad')
+    ));
+  
+  // Permitir apenas quando vem do WhatsApp e não é um anúncio
+  if (!isFromAd && 
+      ((typeof utm_source === 'string' && (
+        utm_source.toLowerCase().includes('whatsapp') || 
+        utm_source.toLowerCase().includes('bitly') || 
+        utm_source.toLowerCase().includes('elseve')
+      )) || 
+      (typeof utm_medium === 'string' && utm_medium.toLowerCase().includes('whatsapp')) ||
+      (typeof utm_campaign === 'string' && utm_campaign.toLowerCase().includes('elseve'))
+     )) {
+    console.log(`[PERMITIDO] Acesso via campanha oficial orgânica. utm_source: ${utm_source}, utm_medium: ${utm_medium}. Permitindo acesso.`);
+    return next();
+  }
+  
+  // Verificação 4: Para outros acessos, verificar se é móvel
+  const isMobile = md.mobile() !== null || md.phone() !== null || md.tablet() !== null;
+  if (isMobile && !userAgent.includes('WhatsApp Web')) {
+    return next();
+  }
+  
+  // Se chegou até aqui, é um acesso desktop ou WhatsApp Web
+  
+  // Verificação 5: Verificar se o IP está na lista de exceções
+  const ipBaseWithoutProxy = ip.split(',')[0].trim();
+  if (neverBanIPs.some(whitelistedIP => ipBaseWithoutProxy.includes(whitelistedIP))) {
+    console.log(`[PERMITIDO] IP ${ip} está na lista de exceções. Acesso permitido mesmo sendo desktop.`);
+    return next();
+  }
+  
+  // BLOQUEIO: É um desktop ou WhatsApp Web e não está na lista de exceções
+  const location = await getIpLocation(ip);
+  const origin = req.headers.origin || '';
+  const acceptLanguage = req.headers["accept-language"] || '';
+  
+  // Extrair informações do dispositivo
+  let device = "Desktop";
+  if (userAgent.includes('WhatsApp Web')) {
+    device = "WhatsApp Web";
+  }
+  
+  // Extrair informações do navegador
+  let browserInfo = "Navegador desconhecido";
+  if (userAgent.includes("Chrome")) {
+    browserInfo = `Chrome ${userAgent.match(/Chrome\/([\d.]+)/)?.[1] || ""}`;
+  } else if (userAgent.includes("Firefox")) {
+    browserInfo = `Firefox ${userAgent.match(/Firefox\/([\d.]+)/)?.[1] || ""}`;
+  } else if (userAgent.includes("Safari") && !userAgent.includes("Chrome")) {
+    browserInfo = `Safari ${userAgent.match(/Version\/([\d.]+)/)?.[1] || ""}`;
+  } else if (userAgent.includes("MSIE") || userAgent.includes("Trident")) {
+    browserInfo = `Internet Explorer ${userAgent.match(/(?:MSIE |rv:)([\d.]+)/)?.[1] || ""}`;
+  } else if (userAgent.includes("Edge") || userAgent.includes("Edg/")) {
+    browserInfo = `Microsoft Edge ${userAgent.match(/(?:Edge|Edg)\/([\d.]+)/)?.[1] || ""}`;
+  } else if (userAgent.includes("Opera") || userAgent.includes("OPR")) {
+    browserInfo = `Opera ${userAgent.match(/(?:Opera|OPR)\/([\d.]+)/)?.[1] || ""}`;
+  }
+  
+  // Extrair sistema operacional
+  let platform = "Plataforma desconhecida";
+  if (userAgent.includes("Windows")) {
+    platform = `Windows ${userAgent.match(/Windows NT ([\d.]+)/)?.[1] || ""}`;
+    if (platform.includes("6.1")) platform = "Windows 7";
+    if (platform.includes("6.2")) platform = "Windows 8";
+    if (platform.includes("6.3")) platform = "Windows 8.1";
+    if (platform.includes("10.0")) platform = "Windows 10/11";
+  } else if (userAgent.includes("Mac OS X")) {
+    platform = `macOS ${userAgent.match(/Mac OS X ([\d_.]+)/)?.[1]?.replace(/_/g, '.') || ""}`;
+  } else if (userAgent.includes("Linux")) {
+    platform = "Linux";
+    if (userAgent.includes("Ubuntu")) platform = "Ubuntu Linux";
+    if (userAgent.includes("Fedora")) platform = "Fedora Linux";
+  } else if (userAgent.includes("Android")) {
+    platform = `Android ${userAgent.match(/Android ([\d.]+)/)?.[1] || ""}`;
+  } else if (userAgent.includes("iOS") || userAgent.includes("iPhone OS")) {
+    platform = `iOS ${userAgent.match(/(?:iOS|iPhone OS) ([\d_]+)/)?.[1]?.replace(/_/g, '.') || ""}`;
+  }
+  
+  // Determinar a fonte de tráfego
+  let refererAnalysis = "Acesso direto";
+  if (referer) {
+    try {
+      const refererUrl = new URL(referer);
+      if (refererUrl.hostname.includes('facebook')) {
+        refererAnalysis = "Facebook";
+        if (referer.includes('facebook.com/ads')) {
+          refererAnalysis = "Anúncio no Facebook";
+        }
+      } else if (refererUrl.hostname.includes('instagram')) {
+        refererAnalysis = "Instagram";
+        if (referer.includes('instagram.com/ads') || referer.includes('ads_manager')) {
+          refererAnalysis = "Anúncio no Instagram";
+        }
+      } else if (refererUrl.hostname.includes('google')) {
+        refererAnalysis = "Google";
+        if (referer.includes('google.com/ads') || referer.includes('adwords')) {
+          refererAnalysis = "Google Ads";
+        }
+      } else if (refererUrl.hostname.includes('youtube')) {
+        refererAnalysis = "YouTube";
+      } else if (refererUrl.hostname.includes('twitter') || refererUrl.hostname.includes('x.com')) {
+        refererAnalysis = "Twitter / X";
+      } else if (refererUrl.hostname.includes('pinterest')) {
+        refererAnalysis = "Pinterest";
+      } else if (refererUrl.hostname.includes('tiktok')) {
+        refererAnalysis = "TikTok";
+      } else {
+        refererAnalysis = `De: ${refererUrl.hostname}`;
+      }
+    } catch (e) {
+      refererAnalysis = referer.substring(0, 100);
+    }
+  }
+  
+  // Verificar se o IP já existe no banco de dados antes de inserir
+  const existingBannedIp = await storage.getBannedIp(ip);
+  
+  if (!existingBannedIp) {
+    // IP não existe, criar novo registro
+    await storage.createBannedIp({
+      ip,
+      userAgent,
+      referer: referer || '',
+      origin: origin || '',
+      device,
+      browserInfo,
+      screenSize: "",
+      platform,
+      language: acceptLanguage,
+      reason: device === "WhatsApp Web" 
+        ? `Tentativa de acesso via WhatsApp Web (${refererAnalysis})`
+        : `Tentativa de acesso via desktop (${refererAnalysis})`,
+      location,
+      accessUrl: req.originalUrl || req.url || '/'
+    });
+  } else if (!existingBannedIp.isBanned) {
+    // IP existe mas não está banido, atualizar para banido
+    await storage.updateBannedIpStatus(ip, true);
+  }
+  
+  console.log(`[BLOQUEIO] IP ${ip} banido por acesso via ${device}. Origem: ${refererAnalysis}, Navegador: ${browserInfo}, SO: ${platform}`);
+  
+  // Retornar página em branco para desktop
+  return res.status(403).send(`
+    <html>
+      <head>
+        <title>about:blank</title>
+        <script>
+          window.location.href = "about:blank";
+        </script>
+      </head>
+      <body></body>
+    </html>
+  `);
+}

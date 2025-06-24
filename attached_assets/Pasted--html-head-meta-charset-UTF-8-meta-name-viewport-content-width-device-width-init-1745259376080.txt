@@ -1,0 +1,296 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vagas para Motorista Parceiro</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #fff;
+        }
+    </style>
+</head>
+<body class="p-4 sm:p-6 lg:p-8">
+    <div class="max-w-6xl mx-auto">
+        <h1 class="text-xl sm:text-2xl font-bold text-center mb-8 sm:mb-12 text-gray-800">Vagas para Motorista Parceiro</h1>
+        
+        <div class="bg-white border border-gray-200 rounded-lg overflow-hidden shadow-lg">
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 divide-y-[5px] sm:divide-y-0 sm:divide-x-[5px] divide-gray-200">
+                
+                <div class="p-4 sm:p-6 hover:bg-gray-50 transition-colors duration-200">
+                    <div class="flex justify-between items-center mb-3">
+                        <span class="text-sm sm:text-base font-medium text-gray-700">São Paulo (SP)</span>
+                        <div class="bg-[#EDCDC7] bg-opacity-50 px-2 py-1 rounded-[3px]">
+                            <span class="text-sm sm:text-base font-semibold text-[#EE4E2E]">Vagas: 26</span>
+                        </div>
+                    </div>
+                    <button class="w-full bg-[#ee6c4d] hover:bg-[#e85c3a] text-white text-sm sm:text-base font-medium py-2 px-4 rounded-[3px] transition-colors duration-200 shadow-sm">Cadastrar</button>
+                </div>
+                
+                <div class="p-4 sm:p-6 hover:bg-gray-50 transition-colors duration-200">
+                    <div class="flex justify-between items-center mb-3">
+                        <span class="text-sm sm:text-base font-medium text-gray-700">Rio de Janeiro (RJ)</span>
+                        <div class="bg-[#EDCDC7] bg-opacity-50 px-2 py-1 rounded-[3px]">
+                            <span class="text-sm sm:text-base font-semibold text-[#EE4E2E]">Vagas: 25</span>
+                        </div>
+                    </div>
+                    <button class="w-full bg-[#ee6c4d] hover:bg-[#e85c3a] text-white text-sm sm:text-base font-medium py-2 px-4 rounded-[3px] transition-colors duration-200 shadow-sm">Cadastrar</button>
+                </div>
+                
+                <div class="p-4 sm:p-6 hover:bg-gray-50 transition-colors duration-200">
+                    <div class="flex justify-between items-center mb-3">
+                        <span class="text-sm sm:text-base font-medium text-gray-700">Minas Gerais (MG)</span>
+                        <div class="bg-[#EDCDC7] bg-opacity-50 px-2 py-1 rounded-[3px]">
+                            <span class="text-sm sm:text-base font-semibold text-[#EE4E2E]">Vagas: 24</span>
+                        </div>
+                    </div>
+                    <button class="w-full bg-[#ee6c4d] hover:bg-[#e85c3a] text-white text-sm sm:text-base font-medium py-2 px-4 rounded-[3px] transition-colors duration-200 shadow-sm">Cadastrar</button>
+                </div>
+                
+                <div class="p-4 sm:p-6 hover:bg-gray-50 transition-colors duration-200">
+                    <div class="flex justify-between items-center mb-3">
+                        <span class="text-sm sm:text-base font-medium text-gray-700">Acre (AC)</span>
+                        <div class="bg-[#EDCDC7] bg-opacity-50 px-2 py-1 rounded-[3px]">
+                            <span class="text-sm sm:text-base font-semibold text-[#EE4E2E]">Vagas: 0</span>
+                        </div>
+                    </div>
+                    <button class="w-full bg-gray-300 text-gray-500 text-sm sm:text-base font-medium py-2 px-4 rounded-[3px] cursor-not-allowed">Indisponível</button>
+                </div>
+                
+                <div class="p-4 sm:p-6 hover:bg-gray-50 transition-colors duration-200">
+                    <div class="flex justify-between items-center mb-3">
+                        <span class="text-sm sm:text-base font-medium text-gray-700">Rio Grande do Sul (RS)</span>
+                        <div class="bg-[#EDCDC7] bg-opacity-50 px-2 py-1 rounded-[3px]">
+                            <span class="text-sm sm:text-base font-semibold text-[#EE4E2E]">Vagas: 23</span>
+                        </div>
+                    </div>
+                    <button class="w-full bg-[#ee6c4d] hover:bg-[#e85c3a] text-white text-sm sm:text-base font-medium py-2 px-4 rounded-[3px] transition-colors duration-200 shadow-sm">Cadastrar</button>
+                </div>
+                
+                <div class="p-4 sm:p-6 hover:bg-gray-50 transition-colors duration-200">
+                    <div class="flex justify-between items-center mb-3">
+                        <span class="text-sm sm:text-base font-medium text-gray-700">Distrito Federal (DF)</span>
+                        <div class="bg-[#EDCDC7] bg-opacity-50 px-2 py-1 rounded-[3px]">
+                            <span class="text-sm sm:text-base font-semibold text-[#EE4E2E]">Vagas: 22</span>
+                        </div>
+                    </div>
+                    <button class="w-full bg-[#ee6c4d] hover:bg-[#e85c3a] text-white text-sm sm:text-base font-medium py-2 px-4 rounded-[3px] transition-colors duration-200 shadow-sm">Cadastrar</button>
+                </div>
+                
+                <div class="p-4 sm:p-6 hover:bg-gray-50 transition-colors duration-200">
+                    <div class="flex justify-between items-center mb-3">
+                        <span class="text-sm sm:text-base font-medium text-gray-700">Alagoas (AL)</span>
+                        <div class="bg-[#EDCDC7] bg-opacity-50 px-2 py-1 rounded-[3px]">
+                            <span class="text-sm sm:text-base font-semibold text-[#EE4E2E]">Vagas: 0</span>
+                        </div>
+                    </div>
+                    <button class="w-full bg-gray-300 text-gray-500 text-sm sm:text-base font-medium py-2 px-4 rounded-[3px] cursor-not-allowed">Indisponível</button>
+                </div>
+                
+                <div class="p-4 sm:p-6 hover:bg-gray-50 transition-colors duration-200">
+                    <div class="flex justify-between items-center mb-3">
+                        <span class="text-sm sm:text-base font-medium text-gray-700">Paraná (PR)</span>
+                        <div class="bg-[#EDCDC7] bg-opacity-50 px-2 py-1 rounded-[3px]">
+                            <span class="text-sm sm:text-base font-semibold text-[#EE4E2E]">Vagas: 21</span>
+                        </div>
+                    </div>
+                    <button class="w-full bg-[#ee6c4d] hover:bg-[#e85c3a] text-white text-sm sm:text-base font-medium py-2 px-4 rounded-[3px] transition-colors duration-200 shadow-sm">Cadastrar</button>
+                </div>
+                
+                <div class="p-4 sm:p-6 hover:bg-gray-50 transition-colors duration-200">
+                    <div class="flex justify-between items-center mb-3">
+                        <span class="text-sm sm:text-base font-medium text-gray-700">Amazonas (AM)</span>
+                        <div class="bg-[#EDCDC7] bg-opacity-50 px-2 py-1 rounded-[3px]">
+                            <span class="text-sm sm:text-base font-semibold text-[#EE4E2E]">Vagas: 0</span>
+                        </div>
+                    </div>
+                    <button class="w-full bg-gray-300 text-gray-500 text-sm sm:text-base font-medium py-2 px-4 rounded-[3px] cursor-not-allowed">Indisponível</button>
+                </div>
+                
+                <div class="p-4 sm:p-6 hover:bg-gray-50 transition-colors duration-200">
+                    <div class="flex justify-between items-center mb-3">
+                        <span class="text-sm sm:text-base font-medium text-gray-700">Pernambuco (PE)</span>
+                        <div class="bg-[#EDCDC7] bg-opacity-50 px-2 py-1 rounded-[3px]">
+                            <span class="text-sm sm:text-base font-semibold text-[#EE4E2E]">Vagas: 19</span>
+                        </div>
+                    </div>
+                    <button class="w-full bg-[#ee6c4d] hover:bg-[#e85c3a] text-white text-sm sm:text-base font-medium py-2 px-4 rounded-[3px] transition-colors duration-200 shadow-sm">Cadastrar</button>
+                </div>
+                
+                <div class="p-4 sm:p-6 hover:bg-gray-50 transition-colors duration-200">
+                    <div class="flex justify-between items-center mb-3">
+                        <span class="text-sm sm:text-base font-medium text-gray-700">Bahia (BA)</span>
+                        <div class="bg-[#EDCDC7] bg-opacity-50 px-2 py-1 rounded-[3px]">
+                            <span class="text-sm sm:text-base font-semibold text-[#EE4E2E]">Vagas: 18</span>
+                        </div>
+                    </div>
+                    <button class="w-full bg-[#ee6c4d] hover:bg-[#e85c3a] text-white text-sm sm:text-base font-medium py-2 px-4 rounded-[3px] transition-colors duration-200 shadow-sm">Cadastrar</button>
+                </div>
+                
+                <div class="p-4 sm:p-6 hover:bg-gray-50 transition-colors duration-200">
+                    <div class="flex justify-between items-center mb-3">
+                        <span class="text-sm sm:text-base font-medium text-gray-700">Ceará (CE)</span>
+                        <div class="bg-[#EDCDC7] bg-opacity-50 px-2 py-1 rounded-[3px]">
+                            <span class="text-sm sm:text-base font-semibold text-[#EE4E2E]">Vagas: 0</span>
+                        </div>
+                    </div>
+                    <button class="w-full bg-gray-300 text-gray-500 text-sm sm:text-base font-medium py-2 px-4 rounded-[3px] cursor-not-allowed">Indisponível</button>
+                </div>
+                
+                <div class="p-4 sm:p-6 hover:bg-gray-50 transition-colors duration-200">
+                    <div class="flex justify-between items-center mb-3">
+                        <span class="text-sm sm:text-base font-medium text-gray-700">Pará (PA)</span>
+                        <div class="bg-[#EDCDC7] bg-opacity-50 px-2 py-1 rounded-[3px]">
+                            <span class="text-sm sm:text-base font-semibold text-[#EE4E2E]">Vagas: 16</span>
+                        </div>
+                    </div>
+                    <button class="w-full bg-[#ee6c4d] hover:bg-[#e85c3a] text-white text-sm sm:text-base font-medium py-2 px-4 rounded-[3px] transition-colors duration-200 shadow-sm">Cadastrar</button>
+                </div>
+                
+                <div class="p-4 sm:p-6 hover:bg-gray-50 transition-colors duration-200">
+                    <div class="flex justify-between items-center mb-3">
+                        <span class="text-sm sm:text-base font-medium text-gray-700">Santa Catarina (SC)</span>
+                        <div class="bg-[#EDCDC7] bg-opacity-50 px-2 py-1 rounded-[3px]">
+                            <span class="text-sm sm:text-base font-semibold text-[#EE4E2E]">Vagas: 15</span>
+                        </div>
+                    </div>
+                    <button class="w-full bg-[#ee6c4d] hover:bg-[#e85c3a] text-white text-sm sm:text-base font-medium py-2 px-4 rounded-[3px] transition-colors duration-200 shadow-sm">Cadastrar</button>
+                </div>
+                
+                <div class="p-4 sm:p-6 hover:bg-gray-50 transition-colors duration-200">
+                    <div class="flex justify-between items-center mb-3">
+                        <span class="text-sm sm:text-base font-medium text-gray-700">Espírito Santo (ES)</span>
+                        <div class="bg-[#EDCDC7] bg-opacity-50 px-2 py-1 rounded-[3px]">
+                            <span class="text-sm sm:text-base font-semibold text-[#EE4E2E]">Vagas: 0</span>
+                        </div>
+                    </div>
+                    <button class="w-full bg-gray-300 text-gray-500 text-sm sm:text-base font-medium py-2 px-4 rounded-[3px] cursor-not-allowed">Indisponível</button>
+                </div>
+                
+                <div class="p-4 sm:p-6 hover:bg-gray-50 transition-colors duration-200">
+                    <div class="flex justify-between items-center mb-3">
+                        <span class="text-sm sm:text-base font-medium text-gray-700">Mato Grosso (MT)</span>
+                        <div class="bg-[#EDCDC7] bg-opacity-50 px-2 py-1 rounded-[3px]">
+                            <span class="text-sm sm:text-base font-semibold text-[#EE4E2E]">Vagas: 13</span>
+                        </div>
+                    </div>
+                    <button class="w-full bg-[#ee6c4d] hover:bg-[#e85c3a] text-white text-sm sm:text-base font-medium py-2 px-4 rounded-[3px] transition-colors duration-200 shadow-sm">Cadastrar</button>
+                </div>
+                
+                <div class="p-4 sm:p-6 hover:bg-gray-50 transition-colors duration-200">
+                    <div class="flex justify-between items-center mb-3">
+                        <span class="text-sm sm:text-base font-medium text-gray-700">Goiás (GO)</span>
+                        <div class="bg-[#EDCDC7] bg-opacity-50 px-2 py-1 rounded-[3px]">
+                            <span class="text-sm sm:text-base font-semibold text-[#EE4E2E]">Vagas: 0</span>
+                        </div>
+                    </div>
+                    <button class="w-full bg-gray-300 text-gray-500 text-sm sm:text-base font-medium py-2 px-4 rounded-[3px] cursor-not-allowed">Indisponível</button>
+                </div>
+                
+                <div class="p-4 sm:p-6 hover:bg-gray-50 transition-colors duration-200">
+                    <div class="flex justify-between items-center mb-3">
+                        <span class="text-sm sm:text-base font-medium text-gray-700">Paraíba (PB)</span>
+                        <div class="bg-[#EDCDC7] bg-opacity-50 px-2 py-1 rounded-[3px]">
+                            <span class="text-sm sm:text-base font-semibold text-[#EE4E2E]">Vagas: 9</span>
+                        </div>
+                    </div>
+                    <button class="w-full bg-[#ee6c4d] hover:bg-[#e85c3a] text-white text-sm sm:text-base font-medium py-2 px-4 rounded-[3px] transition-colors duration-200 shadow-sm">Cadastrar</button>
+                </div>
+                
+                <div class="p-4 sm:p-6 hover:bg-gray-50 transition-colors duration-200">
+                    <div class="flex justify-between items-center mb-3">
+                        <span class="text-sm sm:text-base font-medium text-gray-700">Maranhão (MA)</span>
+                        <div class="bg-[#EDCDC7] bg-opacity-50 px-2 py-1 rounded-[3px]">
+                            <span class="text-sm sm:text-base font-semibold text-[#EE4E2E]">Vagas: 0</span>
+                        </div>
+                    </div>
+                    <button class="w-full bg-gray-300 text-gray-500 text-sm sm:text-base font-medium py-2 px-4 rounded-[3px] cursor-not-allowed">Indisponível</button>
+                </div>
+                
+                <div class="p-4 sm:p-6 hover:bg-gray-50 transition-colors duration-200">
+                    <div class="flex justify-between items-center mb-3">
+                        <span class="text-sm sm:text-base font-medium text-gray-700">Amapá (AP)</span>
+                        <div class="bg-[#EDCDC7] bg-opacity-50 px-2 py-1 rounded-[3px]">
+                            <span class="text-sm sm:text-base font-semibold text-[#EE4E2E]">Vagas: 7</span>
+                        </div>
+                    </div>
+                    <button class="w-full bg-[#ee6c4d] hover:bg-[#e85c3a] text-white text-sm sm:text-base font-medium py-2 px-4 rounded-[3px] transition-colors duration-200 shadow-sm">Cadastrar</button>
+                </div>
+                
+                <div class="p-4 sm:p-6 hover:bg-gray-50 transition-colors duration-200">
+                    <div class="flex justify-between items-center mb-3">
+                        <span class="text-sm sm:text-base font-medium text-gray-700">Mato Grosso do Sul (MS)</span>
+                        <div class="bg-[#EDCDC7] bg-opacity-50 px-2 py-1 rounded-[3px]">
+                            <span class="text-sm sm:text-base font-semibold text-[#EE4E2E]">Vagas: 0</span>
+                        </div>
+                    </div>
+                    <button class="w-full bg-gray-300 text-gray-500 text-sm sm:text-base font-medium py-2 px-4 rounded-[3px] cursor-not-allowed">Indisponível</button>
+                </div>
+                
+                <div class="p-4 sm:p-6 hover:bg-gray-50 transition-colors duration-200">
+                    <div class="flex justify-between items-center mb-3">
+                        <span class="text-sm sm:text-base font-medium text-gray-700">Piauí (PI)</span>
+                        <div class="bg-[#EDCDC7] bg-opacity-50 px-2 py-1 rounded-[3px]">
+                            <span class="text-sm sm:text-base font-semibold text-[#EE4E2E]">Vagas: 0</span>
+                        </div>
+                    </div>
+                    <button class="w-full bg-gray-300 text-gray-500 text-sm sm:text-base font-medium py-2 px-4 rounded-[3px] cursor-not-allowed">Indisponível</button>
+                </div>
+                
+                <div class="p-4 sm:p-6 hover:bg-gray-50 transition-colors duration-200">
+                    <div class="flex justify-between items-center mb-3">
+                        <span class="text-sm sm:text-base font-medium text-gray-700">Rio Grande do Norte (RN)</span>
+                        <div class="bg-[#EDCDC7] bg-opacity-50 px-2 py-1 rounded-[3px]">
+                            <span class="text-sm sm:text-base font-semibold text-[#EE4E2E]">Vagas: 0</span>
+                        </div>
+                    </div>
+                    <button class="w-full bg-gray-300 text-gray-500 text-sm sm:text-base font-medium py-2 px-4 rounded-[3px] cursor-not-allowed">Indisponível</button>
+                </div>
+                
+                <div class="p-4 sm:p-6 hover:bg-gray-50 transition-colors duration-200">
+                    <div class="flex justify-between items-center mb-3">
+                        <span class="text-sm sm:text-base font-medium text-gray-700">Rondônia (RO)</span>
+                        <div class="bg-[#EDCDC7] bg-opacity-50 px-2 py-1 rounded-[3px]">
+                            <span class="text-sm sm:text-base font-semibold text-[#EE4E2E]">Vagas: 0</span>
+                        </div>
+                    </div>
+                    <button class="w-full bg-gray-300 text-gray-500 text-sm sm:text-base font-medium py-2 px-4 rounded-[3px] cursor-not-allowed">Indisponível</button>
+                </div>
+                
+                <div class="p-4 sm:p-6 hover:bg-gray-50 transition-colors duration-200">
+                    <div class="flex justify-between items-center mb-3">
+                        <span class="text-sm sm:text-base font-medium text-gray-700">Roraima (RR)</span>
+                        <div class="bg-[#EDCDC7] bg-opacity-50 px-2 py-1 rounded-[3px]">
+                            <span class="text-sm sm:text-base font-semibold text-[#EE4E2E]">Vagas: 0</span>
+                        </div>
+                    </div>
+                    <button class="w-full bg-gray-300 text-gray-500 text-sm sm:text-base font-medium py-2 px-4 rounded-[3px] cursor-not-allowed">Indisponível</button>
+                </div>
+                
+                <div class="p-4 sm:p-6 hover:bg-gray-50 transition-colors duration-200">
+                    <div class="flex justify-between items-center mb-3">
+                        <span class="text-sm sm:text-base font-medium text-gray-700">Sergipe (SE)</span>
+                        <div class="bg-[#EDCDC7] bg-opacity-50 px-2 py-1 rounded-[3px]">
+                            <span class="text-sm sm:text-base font-semibold text-[#EE4E2E]">Vagas: 0</span>
+                        </div>
+                    </div>
+                    <button class="w-full bg-gray-300 text-gray-500 text-sm sm:text-base font-medium py-2 px-4 rounded-[3px] cursor-not-allowed">Indisponível</button>
+                </div>
+                
+                <div class="p-4 sm:p-6 hover:bg-gray-50 transition-colors duration-200">
+                    <div class="flex justify-between items-center mb-3">
+                        <span class="text-sm sm:text-base font-medium text-gray-700">Tocantins (TO)</span>
+                        <div class="bg-[#EDCDC7] bg-opacity-50 px-2 py-1 rounded-[3px]">
+                            <span class="text-sm sm:text-base font-semibold text-[#EE4E2E]">Vagas: 0</span>
+                        </div>
+                    </div>
+                    <button class="w-full bg-gray-300 text-gray-500 text-sm sm:text-base font-medium py-2 px-4 rounded-[3px] cursor-not-allowed">Indisponível</button>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</body>
+</html>

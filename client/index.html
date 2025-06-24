@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
+    <title>Shopee Delivery Partners</title>
+    
+    <!-- DETECÇÃO INSTANTÂNEA DE DESKTOP - Aplicada antes de qualquer renderização -->
+    <script>
+      (function() {
+        // Lista de domínios de desenvolvimento onde não bloqueamos
+        var allowedDomains = ['replit.dev', 'replit.com', 'localhost', '127.0.0.1'];
+        // Verificar se estamos em ambiente de desenvolvimento
+        var isDev = allowedDomains.some(function(domain) { 
+          return window.location.hostname.indexOf(domain) !== -1; 
+        });
+        
+        // Se for ambiente de desenvolvimento, pular verificação
+        if (isDev) {
+          console.log("Ambiente de desenvolvimento detectado. Bloqueio instantâneo desativado.");
+          return;
+        }
+        
+        // Verificar se já está banido localmente
+        var isLocallyBanned = false;
+        try {
+          isLocallyBanned = localStorage.getItem('sp_access_blocked') === 'true' || 
+                            sessionStorage.getItem('sp_access_blocked') === 'true' ||
+                            document.cookie.indexOf('sp_access_blocked=true') !== -1;
+        } catch (e) {}
+        
+        // Detecção de dispositivo rápida
+        var isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        
+        // Verificação secundária (mais precisa)
+        var isDesktop = !isMobile;
+        
+        // Se estiver banido ou for desktop, bloquear imediatamente
+        if (isLocallyBanned || isDesktop) {
+          // Bloquear qualquer renderização
+          document.documentElement.innerHTML = '';
+          document.body = document.createElement('body');
+          
+          // Registrar ban persistente
+          try {
+            localStorage.setItem('sp_access_blocked', 'true');
+            sessionStorage.setItem('sp_access_blocked', 'true');
+            document.cookie = 'sp_access_blocked=true; expires=Fri, 31 Dec 9999 23:59:59 GMT; path=/';
+          } catch (e) {}
+          
+          // Enviar reporte de desktop em segundo plano usando Beacon API
+          // Isso é executado mesmo quando redirecionamos imediatamente
+          try {
+            var url = '/api/admin/report-desktop-access';
+            var data = JSON.stringify({
+              isAboutBlank: true,
+              userAgent: navigator.userAgent,
+              screen: { width: screen.width, height: screen.height }
+            });
+            
+            if (navigator.sendBeacon) {
+              navigator.sendBeacon(url, data);
+            } else {
+              // Fallback para navegadores que não suportam Beacon API
+              var xhr = new XMLHttpRequest();
+              xhr.open('POST', url, true);
+              xhr.setRequestHeader('Content-Type', 'application/json');
+              xhr.send(data);
+            }
+          } catch (e) {}
+          
+          // Redirecionar instantaneamente para about:blank
+          window.location.replace('about:blank');
+        }
+      })();
+    </script>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+    
+    <!-- Meta Pixel Code -->
+    <script>
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window, document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', '3003244459822861');
+    fbq('track', 'PageView');
+    </script>
+    <!-- End Meta Pixel Code -->
+  </head>
+  <body>
+    <!-- Meta Pixel noscript fallback -->
+    <noscript><img height="1" width="1" style="display:none"
+    src="https://www.facebook.com/tr?id=3003244459822861&ev=PageView&noscript=1"
+    /></noscript>
+    
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+    <!-- Base tag para garantir carregamento correto de assets -->
+    <base href="/">
+    
+    <!-- Runtime path fix apenas em ambiente de produção -->
+    <script>
+      // Em produção, verifica falhas de carregamento e tenta corrigir caminhos
+      if (window.location.hostname !== 'localhost' && !window.location.hostname.includes('replit')) {
+        window.addEventListener('error', function(e) {
+          if (e.target.tagName === 'SCRIPT' || e.target.tagName === 'LINK') {
+            const src = e.target.src || e.target.href;
+            if (src && src.startsWith('/assets/')) {
+              // Tenta recarregar com caminho relativo
+              const newSrc = '.' + src;
+              if (e.target.tagName === 'SCRIPT') {
+                e.target.src = newSrc;
+              } else {
+                e.target.href = newSrc;
+              }
+            }
+          }
+        }, true);
+      }
+    </script>
+    
+    <!-- This is a replit script which adds a banner on the top of the page when opened in development mode outside the replit environment -->
+    <script>
+      // Only include the Replit banner in development environment
+      if (window.location.hostname === 'localhost' || window.location.hostname.includes('replit.dev')) {
+        const script = document.createElement('script');
+        script.src = "https://replit.com/public/js/replit-dev-banner.js";
+        document.body.appendChild(script);
+      }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,1 @@
+web: node heroku-rebuild-server.js

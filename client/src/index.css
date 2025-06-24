@@ -1,0 +1,291 @@
+@import '@fontsource/inter/300.css';
+@import '@fontsource/inter/400.css';
+@import '@fontsource/inter/500.css';
+@import '@fontsource/inter/600.css';
+@import '@fontsource/inter/700.css';
+@import '@fontsource/poppins/300.css';
+@import '@fontsource/poppins/400.css';
+@import '@fontsource/poppins/500.css';
+@import '@fontsource/poppins/600.css';
+@import '@fontsource/poppins/700.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Loewe Next inspired typography system */
+.font-loewe-next {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-feature-settings: 'kern' 1, 'liga' 1, 'ss01' 1;
+  letter-spacing: -0.02em;
+  font-weight: 400;
+}
+
+.font-loewe-next-display {
+  font-family: 'Poppins', 'Inter', system-ui, sans-serif;
+  font-feature-settings: 'kern' 1, 'liga' 1, 'ss01' 1;
+  letter-spacing: -0.03em;
+  font-weight: 500;
+}
+
+.font-loewe-next-heading {
+  font-family: 'Poppins', 'Inter', system-ui, sans-serif;
+  font-feature-settings: 'kern' 1, 'liga' 1, 'ss01' 1;
+  letter-spacing: -0.025em;
+  font-weight: 600;
+  line-height: 1.1;
+}
+
+.font-loewe-next-body {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-feature-settings: 'kern' 1, 'liga' 1;
+  letter-spacing: -0.01em;
+  font-weight: 400;
+  line-height: 1.6;
+}
+
+/* Estilização personalizada da barra de rolagem */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 8px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: #E83D2280;
+  border-radius: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background-color: #E83D22;
+}
+
+/* Estilos personalizados para o campo de CEP */
+.cep-input:focus {
+  outline: none !important;
+  border-color: #E83D22 !important;
+  box-shadow: 0 0 0 1px #E83D22 !important;
+}
+
+:root {
+  --background: 0 0% 100%;
+  --foreground: 20 14.3% 4.1%;
+  --muted: 60 4.8% 95.9%;
+  --muted-foreground: 25 5.3% 44.7%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 20 14.3% 4.1%;
+  --card: 0 0% 100%;
+  --card-foreground: 20 14.3% 4.1%;
+  --border: 20 5.9% 90%;
+  --input: 20 5.9% 90%;
+  --primary: 207 90% 54%;
+  --primary-foreground: 211 100% 99%;
+  --secondary: 60 4.8% 95.9%;
+  --secondary-foreground: 24 9.8% 10%;
+  --accent: 60 4.8% 95.9%;
+  --accent-foreground: 24 9.8% 10%;
+  --destructive: 0 84.2% 60.2%;
+  --destructive-foreground: 60 9.1% 97.8%;
+  --ring: 20 14.3% 4.1%;
+  --radius: 0.5rem;
+}
+
+.dark {
+  --background: 240 10% 3.9%;
+  --foreground: 0 0% 98%;
+  --muted: 240 3.7% 15.9%;
+  --muted-foreground: 240 5% 64.9%;
+  --popover: 240 10% 3.9%;
+  --popover-foreground: 0 0% 98%;
+  --card: 240 10% 3.9%;
+  --card-foreground: 0 0% 98%;
+  --border: 240 3.7% 15.9%;
+  --input: 240 3.7% 15.9%;
+  --primary: 207 90% 54%;
+  --primary-foreground: 211 100% 99%;
+  --secondary: 240 3.7% 15.9%;
+  --secondary-foreground: 0 0% 98%;
+  --accent: 240 3.7% 15.9%;
+  --accent-foreground: 0 0% 98%;
+  --destructive: 0 62.8% 30.6%;
+  --destructive-foreground: 0 0% 98%;
+  --ring: 240 4.9% 83.9%;
+  --radius: 0.5rem;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply font-sans antialiased bg-background text-foreground;
+    font-family: 'Poppins', sans-serif;
+  }
+}
+
+/* Shopee Custom Styles */
+.bg-shopee {
+  background-color: #EE4D2D;
+}
+.bg-custom-orange {
+  background-color: #EE4D2D;
+}
+.text-shopee {
+  color: #EE4D2D;
+}
+.text-custom-orange {
+  color: #EE4D2D;
+}
+.hamburger-line {
+  width: 24px;
+  height: 3px;
+  background-color: #EE4D2D;
+  margin: 4px 0;
+  transition: 0.4s;
+}
+.hamburger-line:nth-child(1) {
+  width: 16px;
+}
+.hamburger-line:nth-child(2) {
+  width: 20px;
+}
+.carousel {
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+}
+.carousel-inner {
+  display: flex;
+  transition: transform 0.5s ease;
+}
+.carousel-item {
+  flex: 0 0 100%;
+}
+.carousel-control {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(238, 77, 45, 0.2);
+  color: #EE4D2D;
+  padding: 10px;
+  text-decoration: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Override for Mercado Libre blue arrows */
+.carousel-control i {
+  color: #3483FA !important;
+}
+.carousel-control-prev {
+  left: 10px;
+}
+.carousel-control-next {
+  right: 10px;
+}
+ol.list-decimal > li::marker {
+  font-weight: bold;
+  color: #F24A2C;
+}
+
+/* Estilos para o modal de carregamento */
+@keyframes bounce {
+  0%, 80%, 100% { transform: scale(0); }
+  40% { transform: scale(1.0); }
+}
+
+.loading-dot {
+  animation: bounce 1.4s infinite ease-in-out both;
+}
+
+.loading-dot:nth-child(1) {
+  animation-delay: -0.32s;
+}
+
+.loading-dot:nth-child(2) {
+  animation-delay: -0.16s;
+}
+
+.status-item {
+  transition: all 0.3s ease;
+  opacity: 0.5;
+  transform: translateY(10px);
+}
+
+.status-item.active {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.status-item.active .status-icon {
+  background-color: #2968D7 !important;
+  color: white;
+}
+
+.status-item.active .status-text {
+  color: #111827;
+  font-weight: bold;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0.5;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 3D Card Effects */
+.perspective-1000 {
+  perspective: 1000px;
+}
+
+.transform-style-preserve-3d {
+  transform-style: preserve-3d;
+}
+
+.backface-hidden {
+  backface-visibility: hidden;
+}
+
+.rotate-y-12 {
+  transform: rotateY(12deg);
+}
+
+.bg-gradient-radial {
+  background: radial-gradient(circle, var(--tw-gradient-stops));
+}
+
+/* Custom gradient for card holographic effect */
+@keyframes holographic {
+  0% { 
+    background-position: 0% 50%;
+  }
+  50% { 
+    background-position: 100% 50%;
+  }
+  100% { 
+    background-position: 0% 50%;
+  }
+}
+
+.card-holographic {
+  background: linear-gradient(-45deg, 
+    rgba(255,255,255,0.1), 
+    rgba(255,255,255,0.05), 
+    rgba(255,255,255,0.1), 
+    rgba(255,255,255,0.05)
+  );
+  background-size: 400% 400%;
+  animation: holographic 3s ease infinite;
+}

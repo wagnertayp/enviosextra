@@ -1,0 +1,54 @@
+/cadastro:1 Access to fetch at 'https://disparador-f065362693d3.herokuapp.com/api/vehicle-info/OZY3C75' from origin 'https://shopee-entregador.com' has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource. If an opaque response serves your needs, set the request's mode to 'no-cors' to fetch the resource with CORS disabled.
+index-DFn8kc-Z.js:157 
+            
+            
+           GET https://disparador-f065362693d3.herokuapp.com/api/vehicle-info/OZY3C75 net::ERR_FAILED 404 (Not Found)
+D @ index-DFn8kc-Z.js:157
+(anonymous) @ index-DFn8kc-Z.js:157
+om @ index-DFn8kc-Z.js:40
+Ns @ index-DFn8kc-Z.js:40
+(anonymous) @ index-DFn8kc-Z.js:40
+S @ index-DFn8kc-Z.js:25
+O @ index-DFn8kc-Z.js:25
+index-DFn8kc-Z.js:157 [ERRO] Falha ao consultar backend: TypeError: Failed to fetch
+    at D (index-DFn8kc-Z.js:157:7837)
+    at index-DFn8kc-Z.js:157:6112
+    at om (index-DFn8kc-Z.js:40:24272)
+    at Ns (index-DFn8kc-Z.js:40:42382)
+    at index-DFn8kc-Z.js:40:40700
+    at S (index-DFn8kc-Z.js:25:1559)
+    at MessagePort.O (index-DFn8kc-Z.js:25:1924)
+D @ index-DFn8kc-Z.js:157
+await in D
+(anonymous) @ index-DFn8kc-Z.js:157
+om @ index-DFn8kc-Z.js:40
+Ns @ index-DFn8kc-Z.js:40
+(anonymous) @ index-DFn8kc-Z.js:40
+S @ index-DFn8kc-Z.js:25
+O @ index-DFn8kc-Z.js:25
+index-DFn8kc-Z.js:157 [ERRO] Todas as tentativas de obter dados do veículo falharam
+D @ index-DFn8kc-Z.js:157
+await in D
+(anonymous) @ index-DFn8kc-Z.js:157
+om @ index-DFn8kc-Z.js:40
+Ns @ index-DFn8kc-Z.js:40
+(anonymous) @ index-DFn8kc-Z.js:40
+S @ index-DFn8kc-Z.js:25
+O @ index-DFn8kc-Z.js:25
+/cadastro:1 Pattern attribute value [A-Za-z0-9-]* is not a valid regular expression: Uncaught SyntaxError: Invalid regular expression: /[A-Za-z0-9-]*/v: Invalid character class
+index-DFn8kc-Z.js:256 
+            
+            
+           GET https://shopee-entregador.com/api/check-ip-status 404 (Not Found)
+(anonymous) @ index-DFn8kc-Z.js:256
+setInterval
+(anonymous) @ index-DFn8kc-Z.js:256
+om @ index-DFn8kc-Z.js:40
+Ns @ index-DFn8kc-Z.js:40
+Dw @ index-DFn8kc-Z.js:40
+$o @ index-DFn8kc-Z.js:38
+p3 @ index-DFn8kc-Z.js:40
+Jo @ index-DFn8kc-Z.js:40
+d_ @ index-DFn8kc-Z.js:40
+S @ index-DFn8kc-Z.js:25
+O @ index-DFn8kc-Z.js:25
