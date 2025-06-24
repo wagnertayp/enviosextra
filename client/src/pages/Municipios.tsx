@@ -357,7 +357,7 @@ const Municipios: React.FC = () => {
   // Main UI that works for both API data and static data
   return (
     <>
-      <div className="bg-[#FDE80F] min-h-screen flex flex-col">
+      <div className="bg-white min-h-screen flex flex-col">
         <Header />
       <Breadcrumb />
       <PageTitle title="Seleccionar Municipios" />
