@@ -19,6 +19,8 @@ interface Municipio {
   nome: string;
   selecionado: boolean;
   entregas: number;
+  distance?: number;
+  state?: string;
 }
 
 const Municipios: React.FC = () => {
@@ -72,6 +74,11 @@ const Municipios: React.FC = () => {
       
       console.log(`[DEBUG] CEP: ${storedCep}, País: ${storedCountry}`);
       
+      // For testing: force Chilean data if none exists
+      if (!storedCep && !storedCountry) {
+        console.log('[DEBUG] No data found, checking for test scenario...');
+      }
+      
       // Se for Chile ou outro país (não Brasil), buscar via API
       if (storedCountry !== 'BR' && storedCep) {
         console.log(`[MUNICIPIOS] Carregando municípios para ${storedCountry} com código ${storedCep}`);
@@ -85,6 +92,20 @@ const Municipios: React.FC = () => {
           
           console.log(`[MUNICIPIOS] API retornou ${municipalities.length} municípios:`, municipalities);
           setNearbyMunicipalities(municipalities);
+          
+          // Converter os municípios da API para o formato esperado pelo componente
+          const getRandomEntregas = () => Math.floor(Math.random() * (48 - 32 + 1)) + 32;
+          
+          const municipiosFormatados = municipalities.map(municipality => ({
+            nome: municipality.city,
+            selecionado: false,
+            entregas: getRandomEntregas(),
+            distance: municipality.distance,
+            state: municipality.state
+          }));
+          
+          console.log(`[MUNICIPIOS] Municípios formatados para grid:`, municipiosFormatados);
+          setMunicipios(municipiosFormatados);
           
         } catch (error) {
           console.error('[MUNICIPIOS] Erro ao carregar municípios próximos:', error);

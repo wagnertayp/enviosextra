@@ -220,6 +220,13 @@ const CepModal: React.FC<CepModalProps> = ({ isOpen, onClose, onConfirm }) => {
   // Confirmar os dados
   const handleConfirm = () => {
     if (locationData) {
+      // Store postal code and country in localStorage for international users
+      if (userLocation && userLocation.countryCode !== 'BR') {
+        localStorage.setItem('user_cep', cep);
+        localStorage.setItem('user_country', userLocation.countryCode);
+        console.log(`[CEPMODAL] Salvando dados internacionais: CEP=${cep}, País=${userLocation.countryCode}`);
+      }
+      
       onConfirm({
         cep: formattedCep,
         city: locationData.city,
