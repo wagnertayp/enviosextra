@@ -70,10 +70,11 @@ const Municipios: React.FC = () => {
       const storedCep = localStorage.getItem('user_cep');
       const storedCountry = localStorage.getItem('user_country') || 'BR';
       
+      console.log(`[DEBUG] CEP: ${storedCep}, País: ${storedCountry}`);
+      
       // Se for Chile ou outro país (não Brasil), buscar via API
       if (storedCountry !== 'BR' && storedCep) {
-        console.log(`Carregando municípios para ${storedCountry} com código ${storedCep}`);
-        setLoading(true);
+        console.log(`[MUNICIPIOS] Carregando municípios para ${storedCountry} com código ${storedCep}`);
         
         try {
           const municipalities = await GeolocationService.getNearbyMunicipalities(
@@ -82,19 +83,19 @@ const Municipios: React.FC = () => {
             20 // raio de 20km para mais opções
           );
           
+          console.log(`[MUNICIPIOS] API retornou ${municipalities.length} municípios:`, municipalities);
           setNearbyMunicipalities(municipalities);
-          console.log(`Carregados ${municipalities.length} municípios próximos`);
           
         } catch (error) {
-          console.error('Erro ao carregar municípios próximos:', error);
+          console.error('[MUNICIPIOS] Erro ao carregar municípios próximos:', error);
           toast({
             title: "Erro",
             description: "Não foi possível carregar as cidades próximas.",
             variant: "destructive",
           });
-        } finally {
-          setLoading(false);
         }
+      } else {
+        console.log(`[MUNICIPIOS] Brasil detectado ou CEP não disponível. Usando dados estáticos.`);
       }
     };
 
@@ -103,35 +104,43 @@ const Municipios: React.FC = () => {
 
   useEffect(() => {
     const candidatoData = localStorage.getItem('candidato_data');
+    const storedCountry = localStorage.getItem('user_country') || 'BR';
+    
     if (!candidatoData || !cepData) {
       // Redirecionar para página inicial se não tiver os dados
       navigate('/');
       return;
     }
 
-    // Carregar municípios do estado do usuário (Brasil)
-    const estadoSigla = cepData.state;
-    
-    if (estadoSigla && municipiosPorEstado[estadoSigla as keyof typeof municipiosPorEstado]) {
-      const getRandomEntregas = () => Math.floor(Math.random() * (48 - 32 + 1)) + 32;
+    // Para Brasil, carregar municípios do estado do usuário
+    if (storedCountry === 'BR') {
+      const estadoSigla = cepData.state;
       
-      const municipiosDoEstado = municipiosPorEstado[estadoSigla as keyof typeof municipiosPorEstado].map((nome: string) => ({
-        nome,
-        selecionado: false, // Inicialmente nenhum selecionado
-        entregas: getRandomEntregas() // Número aleatório de entregas entre 32 e 48
-      }));
+      if (estadoSigla && municipiosPorEstado[estadoSigla as keyof typeof municipiosPorEstado]) {
+        const getRandomEntregas = () => Math.floor(Math.random() * (48 - 32 + 1)) + 32;
+        
+        const municipiosDoEstado = municipiosPorEstado[estadoSigla as keyof typeof municipiosPorEstado].map((nome: string) => ({
+          nome,
+          selecionado: false, // Inicialmente nenhum selecionado
+          entregas: getRandomEntregas() // Número aleatório de entregas entre 32 e 48
+        }));
+        
+        setMunicipios(municipiosDoEstado);
+      } else {
+        // Caso não encontre os municípios (raro, mas pode acontecer)
+        toast({
+          title: "Error al cargar municipios",
+          description: "No pudimos encontrar los municipios de tu estado.",
+          variant: "destructive",
+        });
+      }
       
-      setMunicipios(municipiosDoEstado);
+      setLoading(false);
     } else {
-      // Caso não encontre os municípios (raro, mas pode acontecer)
-      toast({
-        title: "Error al cargar municipios",
-        description: "No pudimos encontrar los municipios de tu estado.",
-        variant: "destructive",
-      });
+      // Para outros países, aguardar carregamento via API no outro useEffect
+      console.log(`[MUNICIPIOS] País não-brasileiro detectado: ${storedCountry}. Aguardando carregamento via API.`);
+      setLoading(false);
     }
-    
-    setLoading(false);
   }, [cepData, navigate, toast]);
 
   const toggleAllMunicipios = () => {
@@ -323,7 +332,7 @@ const Municipios: React.FC = () => {
                 </div>
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 max-h-96 overflow-y-auto">
-                  {nearbyMunicipalities.map((municipality, index) => (
+                  {nearbyMunicipalities.length > 0 ? nearbyMunicipalities.map((municipality, index) => (
                     <div key={`${municipality.city}-${index}`} className="flex items-center space-x-2 p-3 hover:bg-gray-50 rounded border">
                       <Checkbox
                         id={`municipio-${municipality.city}-${index}`}
@@ -345,7 +354,7 @@ const Municipios: React.FC = () => {
                           {municipality.city}
                         </label>
                         <div className="flex items-center space-x-2 mt-1">
-                          {municipality.distance && (
+                          {municipality.distance !== undefined && (
                             <span className="text-xs text-blue-600 bg-blue-100 px-2 py-1 rounded">
                               {municipality.distance.toFixed(1)} km
                             </span>
@@ -358,7 +367,11 @@ const Municipios: React.FC = () => {
                         </div>
                       </div>
                     </div>
-                  ))}
+                  )) : (
+                    <div className="col-span-full text-center text-gray-500 py-8">
+                      <p>Cargando ciudades próximas...</p>
+                    </div>
+                  )}
                 </div>
               </Card>
 

@@ -1,0 +1,186 @@
+{
+  "query": {
+    "code": "7500000",
+    "unit": "km\"",
+    "radius": "10",
+    "country": "CL"
+  },
+  "results": [
+    {
+      "code": "7500000",
+      "city": "Providencia",
+      "state": "12",
+      "city_en": null,
+      "state_en": null,
+      "distance": 0
+    },
+    {
+      "code": "7510041",
+      "city": "Providencia, Chile",
+      "state": null,
+      "city_en": null,
+      "state_en": null,
+      "distance": 1.73
+    },
+    {
+      "code": "7750000",
+      "city": "Ñuñoa",
+      "state": "12",
+      "city_en": null,
+      "state_en": null,
+      "distance": 2.69
+    },
+    {
+      "code": "8330066",
+      "city": "Santiago",
+      "state": null,
+      "city_en": null,
+      "state_en": null,
+      "distance": 3.44
+    },
+    {
+      "code": "8320214",
+      "city": "Santiago",
+      "state": null,
+      "city_en": null,
+      "state_en": null,
+      "distance": 3.93
+    },
+    {
+      "code": "8420000",
+      "city": "Recoleta",
+      "state": "12",
+      "city_en": null,
+      "state_en": null,
+      "distance": 3.97
+    },
+    {
+      "code": "7580012",
+      "city": "Las Condes",
+      "state": null,
+      "city_en": null,
+      "state_en": null,
+      "distance": 4.55
+    },
+    {
+      "code": "7560742",
+      "city": "Las Condes",
+      "state": null,
+      "city_en": null,
+      "state_en": null,
+      "distance": 4.72
+    },
+    {
+      "code": "8320000",
+      "city": "Santiago",
+      "state": "12",
+      "city_en": null,
+      "state_en": null,
+      "distance": 4.79
+    },
+    {
+      "code": "7560356",
+      "city": "Las Condes",
+      "state": null,
+      "city_en": null,
+      "state_en": null,
+      "distance": 5.15
+    },
+    {
+      "code": "8380000",
+      "city": "Independencia",
+      "state": "12",
+      "city_en": null,
+      "state_en": null,
+      "distance": 5.76
+    },
+    {
+      "code": "7810000",
+      "city": "Macul",
+      "state": "12",
+      "city_en": null,
+      "state_en": null,
+      "distance": 6.05
+    },
+    {
+      "code": "7850000",
+      "city": "La Reina",
+      "state": "12",
+      "city_en": null,
+      "state_en": null,
+      "distance": 6.93
+    },
+    {
+      "code": "8940000",
+      "city": "San Joaquín",
+      "state": "12",
+      "city_en": null,
+      "state_en": null,
+      "distance": 6.93
+    },
+    {
+      "code": "7630000",
+      "city": "Vitacura",
+      "state": "12",
+      "city_en": null,
+      "state_en": null,
+      "distance": 7.12
+    },
+    {
+      "code": "8900000",
+      "city": "San Miguel",
+      "state": "12",
+      "city_en": null,
+      "state_en": null,
+      "distance": 8.04
+    },
+    {
+      "code": "8500000",
+      "city": "Quinta Normal",
+      "state": "12",
+      "city_en": null,
+      "state_en": null,
+      "distance": 8.56
+    },
+    {
+      "code": "8540000",
+      "city": "Conchalí",
+      "state": "12",
+      "city_en": null,
+      "state_en": null,
+      "distance": 8.62
+    },
+    {
+      "code": "8460000",
+      "city": "Pedro Aguirre Cerda",
+      "state": "12",
+      "city_en": null,
+      "state_en": null,
+      "distance": 8.79
+    },
+    {
+      "code": "8580000",
+      "city": "Huechuraba",
+      "state": "12",
+      "city_en": null,
+      "state_en": null,
+      "distance": 8.84
+    },
+    {
+      "code": "9160000",
+      "city": "Estación Central",
+      "state": "12",
+      "city_en": null,
+      "state_en": null,
+      "distance": 8.89
+    },
+    {
+      "code": "7910000",
+      "city": "Penalolén",
+      "state": "12",
+      "city_en": null,
+      "state_en": null,
+      "distance": 9.58
+    }
+  ]
+}

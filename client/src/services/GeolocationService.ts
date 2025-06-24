@@ -35,57 +35,63 @@ export class GeolocationService {
     const unit = 'km';
     
     try {
-      console.log(`Buscando municípios próximos ao código ${postalCode} no país ${country}`);
+      console.log(`[GEOLOCATION] Buscando municípios próximos ao código ${postalCode} no país ${country} em raio de ${radius}${unit}`);
       
-      const response = await fetch(
-        `https://app.zipcodebase.com/api/v1/radius?apikey=${apiKey}&code=${postalCode}&country=${country}&radius=${radius}&unit=${unit}`,
-        {
-          method: 'GET',
-          headers: {
-            'Accept': 'application/json',
-          }
+      const url = `https://app.zipcodebase.com/api/v1/radius?apikey=${apiKey}&code=${postalCode}&country=${country}&radius=${radius}&unit=${unit}`;
+      console.log(`[GEOLOCATION] URL da API: ${url}`);
+      
+      const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+          'Accept': 'application/json',
         }
-      );
+      });
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
       const data = await response.json();
-      console.log('Resposta da API Zipcodebase radius:', data);
+      console.log('[GEOLOCATION] Resposta completa da API Zipcodebase:', data);
 
       if (!data.results || !Array.isArray(data.results)) {
-        console.warn('Formato de resposta inesperado da API:', data);
+        console.warn('[GEOLOCATION] Formato de resposta inesperado da API:', data);
         return [];
       }
 
+      console.log(`[GEOLOCATION] Resultados brutos: ${data.results.length} itens`);
+
       // Transformar os resultados em formato padronizado
-      const municipalities: Municipality[] = data.results.map((item: any) => ({
-        city: item.city || item.city_name || 'Ciudad Desconocida',
-        state: item.state || item.state_name || item.province,
-        postal_code: item.code || item.postal_code,
-        distance: item.distance ? parseFloat(item.distance) : undefined
-      }));
+      const municipalities: Municipality[] = data.results.map((item: any, index: number) => {
+        console.log(`[GEOLOCATION] Processando item ${index}:`, item);
+        return {
+          city: item.city || 'Ciudad Desconocida',
+          state: item.state || '',
+          postal_code: item.code,
+          distance: item.distance ? parseFloat(item.distance.toString()) : 0
+        };
+      });
+
+      console.log(`[GEOLOCATION] Municípios processados:`, municipalities);
 
       // Remover duplicatas baseadas na cidade
       const uniqueMunicipalities = municipalities.filter((municipality, index, self) => 
         index === self.findIndex(m => m.city === municipality.city)
       );
 
-      // Ordenar por distância (se disponível) ou alfabeticamente
+      // Ordenar por distância
       uniqueMunicipalities.sort((a, b) => {
-        if (a.distance !== undefined && b.distance !== undefined) {
-          return a.distance - b.distance;
-        }
-        return a.city.localeCompare(b.city);
+        const distA = a.distance || 999;
+        const distB = b.distance || 999;
+        return distA - distB;
       });
 
-      console.log(`Encontrados ${uniqueMunicipalities.length} municípios únicos`);
+      console.log(`[GEOLOCATION] Encontrados ${uniqueMunicipalities.length} municípios únicos:`, uniqueMunicipalities);
       return uniqueMunicipalities;
 
     } catch (error) {
-      console.error('Erro ao buscar municípios próximos:', error);
-      return [];
+      console.error('[GEOLOCATION] Erro ao buscar municípios próximos:', error);
+      throw error;
     }
   }
 
