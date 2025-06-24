@@ -526,13 +526,21 @@ const Municipios: React.FC = () => {
                     onClick={() => toggleMunicipio(index)}
                   >
                     <div className="flex items-center justify-between">
-                      <span className="text-xs sm:text-sm font-medium text-gray-700 truncate max-w-[75%] sm:max-w-[80%]">
-                        {municipio.nome}
-                      </span>
+                      <div className="flex-1 min-w-0">
+                        <span className="text-xs sm:text-sm font-medium text-gray-700 truncate block">
+                          {municipio.nome}
+                        </span>
+                        {/* Mostrar distância se disponível (para dados da API) */}
+                        {municipio.distance !== undefined && (
+                          <span className="text-xs text-blue-600 bg-blue-100 px-1 py-0.5 rounded mt-1 inline-block">
+                            {municipio.distance.toFixed(1)} km
+                          </span>
+                        )}
+                      </div>
                       <Checkbox
                         checked={municipio.selecionado}
                         onCheckedChange={() => toggleMunicipio(index)}
-                        className="h-4 w-4 sm:h-5 sm:w-5 border-gray-300 rounded data-[state=checked]:bg-[#3483FA] data-[state=checked]:text-white"
+                        className="h-4 w-4 sm:h-5 sm:w-5 border-gray-300 rounded data-[state=checked]:bg-[#3483FA] data-[state=checked]:text-white ml-2"
                       />
                     </div>
                   </div>
