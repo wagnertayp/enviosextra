@@ -592,23 +592,11 @@ const Municipios: React.FC = () => {
               </div>
             </>
           )}
-        
-        <div className="mt-6">
-              <Button
-                type="button"
-                onClick={handleSubmit}
-                className="w-full bg-[#3483FA] hover:bg-[#2968D7] text-white font-medium py-6 text-base rounded-[3px]"
-                disabled={submitting || !selectedRadius}
-                style={{ height: '50px' }}
-              >
-                {submitting ? 'Procesando...' : 'Continuar'}
-              </Button>
-            </div>
-          </>
-        )}
+        </div>
       </div>
       
       <Footer />
+      </div>
       
       <LoadingModal
         isOpen={showLoadingModal}
