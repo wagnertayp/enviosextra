@@ -411,187 +411,184 @@ const Municipios: React.FC = () => {
       <div className="bg-white min-h-screen flex flex-col">
         <Header />
       <Breadcrumb />
-      <PageTitle title="Seleccionar Municipios" />
+      <PageTitle title="Zona de Entrega" />
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-4xl mx-auto">
           
-          <div className="text-center mb-6">
-            <h1 className="text-2xl font-bold text-gray-800 mb-2">Centros de Distribución Disponibles</h1>
+          <div className="text-center mb-8">
+            <h1 className="text-2xl font-bold text-gray-800 mb-2">Zona de Entrega</h1>
             <p className="text-gray-600">
-              Selecciona las ciudades donde puedes recoger los pedidos en el Centro de distribución de Mercado Libre. En cada ciudad a continuación está ubicado un centro de distribución y según tu disponibilidad puedes elegir más de 1 centro para recoger los pedidos.
+              Selecciona el radio de entrega según tu disponibilidad de desplazamiento. 
+              Cuanto mayor el radio, más localidades disponibles y mejores ingresos.
             </p>
           </div>
 
-          {/* Show API-based municipalities if available */}
-          {nearbyMunicipalities.length > 0 && (
-            <>
-              
-
-              <Card className="p-4 sm:p-6 mb-6">
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 gap-2">
-                  <h2 className="text-lg font-semibold text-gray-700">
-                    Centros de Distribución ({nearbyMunicipalities.length})
-                  </h2>
-                  <div className="flex items-center gap-3">
-                    <span className="text-sm text-gray-500">
-                      Ordenado por proximidad
-                    </span>
-                    <Button
-                      type="button"
-                      onClick={() => {
-                        const allSelected = nearbyMunicipalities.every(m => selectedMunicipios.includes(m.city));
-                        if (allSelected) {
-                          setSelectedMunicipios([]);
-                        } else {
-                          setSelectedMunicipios(nearbyMunicipalities.map(m => m.city));
-                        }
-                      }}
-                      variant="outline"
-                      size="sm"
-                      className="text-xs px-3 py-1 h-8"
-                    >
-                      {nearbyMunicipalities.every(m => selectedMunicipios.includes(m.city)) ? 'Desmarcar' : 'Seleccionar'} Todos
-                    </Button>
+          {/* Radius Selection Cards */}
+          <div className="grid gap-6 mb-8">
+            {[
+              { 
+                radius: 20, 
+                locations: 12, 
+                dailyEarnings: 144, 
+                title: "Zona Local",
+                description: "Entregas cercanas, menos desplazamiento"
+              },
+              { 
+                radius: 50, 
+                locations: 23, 
+                dailyEarnings: 276, 
+                title: "Zona Extendida",
+                description: "Balance perfecto entre distancia e ingresos",
+                recommended: true
+              },
+              { 
+                radius: 80, 
+                locations: 29, 
+                dailyEarnings: 348, 
+                title: "Zona Amplia",
+                description: "Máximos ingresos, mayor cobertura territorial"
+              }
+            ].map((zone) => (
+              <Card 
+                key={zone.radius}
+                className={`relative p-6 cursor-pointer transition-all duration-300 border-2 ${
+                  selectedRadius === zone.radius
+                    ? 'border-[#3483FA] bg-[#F0F7FF] shadow-lg transform scale-[1.02]'
+                    : 'border-gray-200 hover:border-[#3483FA] hover:shadow-md'
+                } ${zone.recommended ? 'ring-2 ring-yellow-400 ring-opacity-30' : ''}`}
+                onClick={() => setSelectedRadius(zone.radius)}
+              >
+                {zone.recommended && (
+                  <div className="absolute -top-3 left-6 bg-yellow-400 text-black px-3 py-1 rounded-full text-sm font-medium">
+                    Recomendado
+                  </div>
+                )}
+                
+                <div className="flex items-start justify-between mb-4">
+                  <div className="flex-1">
+                    <div className="flex items-center gap-3 mb-2">
+                      <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${
+                        selectedRadius === zone.radius 
+                          ? 'border-[#3483FA] bg-[#3483FA]' 
+                          : 'border-gray-300'
+                      }`}>
+                        {selectedRadius === zone.radius && (
+                          <div className="w-2 h-2 bg-white rounded-full"></div>
+                        )}
+                      </div>
+                      <h3 className="text-xl font-semibold text-gray-800">
+                        {zone.title}
+                      </h3>
+                      <span className="bg-[#3483FA] text-white px-2 py-1 rounded-full text-sm font-medium">
+                        {zone.radius}km
+                      </span>
+                    </div>
+                    <p className="text-gray-600 mb-4">{zone.description}</p>
                   </div>
                 </div>
-                
-                <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 max-h-96 overflow-y-auto">
-                  {nearbyMunicipalities.map((municipality, index) => {
-                    const isSelected = selectedMunicipios.includes(municipality.city);
-                    return (
-                      <div 
-                        key={`${municipality.city}-${index}`} 
-                        className={`p-3 border rounded-lg cursor-pointer transition-all duration-200 hover:shadow-md ${
-                          isSelected 
-                            ? 'border-[#3483FA] bg-[#F0F7FF] shadow-sm' 
-                            : 'border-gray-200 bg-white hover:border-gray-300'
-                        }`}
-                        onClick={() => {
-                          if (isSelected) {
-                            setSelectedMunicipios(selectedMunicipios.filter(m => m !== municipality.city));
-                          } else {
-                            setSelectedMunicipios([...selectedMunicipios, municipality.city]);
-                          }
-                        }}
-                      >
-                        <div className="flex items-start space-x-2">
-                          <Checkbox
-                            id={`municipio-${municipality.city}-${index}`}
-                            checked={isSelected}
-                            onCheckedChange={(checked) => {
-                              if (checked) {
-                                setSelectedMunicipios([...selectedMunicipios, municipality.city]);
-                              } else {
-                                setSelectedMunicipios(selectedMunicipios.filter(m => m !== municipality.city));
-                              }
-                            }}
-                            className="border-[#3483FA] data-[state=checked]:bg-[#3483FA] mt-0.5 flex-shrink-0"
-                          />
-                          <div className="flex-1 min-w-0">
-                            <label 
-                              htmlFor={`municipio-${municipality.city}-${index}`} 
-                              className="text-sm font-medium leading-tight cursor-pointer block text-gray-800"
-                            >
-                              {municipality.city}
-                            </label>
-                            <div className="flex flex-col gap-1 mt-1">
-                              {municipality.distance !== undefined && (
-                                <span className="text-xs text-blue-600 bg-blue-100 px-2 py-0.5 rounded-full w-fit">
-                                  {municipality.distance.toFixed(1)} km
-                                </span>
-                              )}
-                              {municipality.state && (
-                                <span className="text-xs text-gray-500">
-                                  Región {municipality.state}
-                                </span>
-                              )}
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    );
-                  })}
+
+                <div className="grid grid-cols-3 gap-4">
+                  <div className="bg-white p-4 rounded-lg border border-gray-100">
+                    <div className="text-2xl font-bold text-[#3483FA] mb-1">
+                      {zone.locations}
+                    </div>
+                    <div className="text-sm text-gray-600">localidades próximas</div>
+                  </div>
+                  
+                  <div className="bg-white p-4 rounded-lg border border-gray-100">
+                    <div className="text-2xl font-bold text-emerald-600 mb-1">
+                      ${zone.dailyEarnings}
+                    </div>
+                    <div className="text-sm text-gray-600">ingresos diarios USD</div>
+                  </div>
+                  
+                  <div className="bg-white p-4 rounded-lg border border-gray-100">
+                    <div className="text-2xl font-bold text-purple-600 mb-1">
+                      ${(zone.dailyEarnings * 30).toLocaleString()}
+                    </div>
+                    <div className="text-sm text-gray-600">ingresos mensuales</div>
+                  </div>
+                </div>
+
+                <div className="mt-4 pt-4 border-t border-gray-100">
+                  <div className="flex justify-between text-sm text-gray-600">
+                    <span>Tarifa por entrega: $12 USD</span>
+                    <span>Radio de cobertura: {zone.radius}km</span>
+                  </div>
                 </div>
               </Card>
+            ))}
+          </div>
 
-              {selectedMunicipios.length > 0 && (
-                <Card className="p-6 bg-gradient-to-br from-slate-50 to-gray-50 border border-slate-200 mb-6 shadow-sm">
-                  <div className="space-y-5">
-                    {/* Header */}
-                    <div className="flex items-center justify-between">
-                      <h3 className="text-lg font-semibold text-slate-900">
-                        Proyección de Ingresos
-                      </h3>
-                      <div className="bg-slate-800 text-white px-3 py-1 rounded-full text-sm font-medium">
-                        {selectedMunicipios.length} centro{selectedMunicipios.length > 1 ? 's' : ''} activo{selectedMunicipios.length > 1 ? 's' : ''}
-                      </div>
-                    </div>
-
-                    {/* Main metrics */}
-                    <div className="grid grid-cols-2 gap-4">
-                      <div className="bg-white p-4 rounded-lg border border-slate-200">
-                        <div className="text-2xl font-bold text-slate-900 mb-1">
-                          {Math.min(selectedMunicipios.length * 12, 50)}
-                        </div>
-                        <div className="text-sm text-slate-600">Entregas diarias estimadas</div>
-                      </div>
-                      
-                      <div className="bg-white p-4 rounded-lg border border-slate-200">
-                        <div className="text-2xl font-bold text-emerald-600 mb-1">
-                          ${Math.min(selectedMunicipios.length * 12 * 12, 600)}
-                        </div>
-                        <div className="text-sm text-slate-600">Ingresos diarios USD</div>
-                      </div>
-                    </div>
-
-                    {/* Income breakdown */}
-                    <div className="bg-white p-4 rounded-lg border border-slate-200">
-                      <div className="text-sm text-slate-700 space-y-2">
-                        <div className="flex justify-between items-center">
-                          <span>Tarifa por entrega:</span>
-                          <span className="font-semibold">$12 USD</span>
-                        </div>
-                        <div className="flex justify-between items-center">
-                          <span>Ingresos semanales:</span>
-                          <span className="font-semibold text-emerald-600">${(Math.min(selectedMunicipios.length * 12 * 12, 600) * 7).toLocaleString()} USD</span>
-                        </div>
-                        <div className="flex justify-between items-center">
-                          <span>Ingresos mensuales:</span>
-                          <span className="font-semibold text-emerald-600">${(Math.min(selectedMunicipios.length * 12 * 12, 600) * 30).toLocaleString()} USD</span>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Payment info */}
-                    <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                      <div className="text-sm text-blue-800">
-                        <div className="font-medium mb-1">Sistema de Pagos Mercado Libre</div>
-                        <div>Transferencias semanales directas a tu cuenta bancaria. Sin comisiones ocultas.</div>
-                      </div>
-                    </div>
-                  </div>
-                </Card>
-              )}
-
-              <div className="flex justify-between">
-                <Button
-                  variant="outline"
-                  onClick={() => navigate('/cadastro')}
-                  className="border-gray-300 text-gray-600 hover:bg-gray-50"
-                >
-                  Volver
-                </Button>
-                
-                <Button
-                  onClick={handleSubmit}
-                  disabled={submitting || selectedMunicipios.length === 0}
-                  className="bg-[#3483FA] hover:bg-blue-600 text-white"
-                >
-                  {submitting ? 'Procesando...' : 'Continuar'}
-                </Button>
+          {selectedRadius && (
+            <Card className="p-6 bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-200 mb-6">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-10 h-10 bg-[#3483FA] rounded-full flex items-center justify-center">
+                  <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                  </svg>
+                </div>
+                <div>
+                  <h3 className="text-lg font-semibold text-[#3483FA]">
+                    Zona de {selectedRadius}km Seleccionada
+                  </h3>
+                  <p className="text-blue-700">
+                    {selectedRadius === 20 && "12 localidades próximas disponibles para entrega"}
+                    {selectedRadius === 50 && "23 localidades próximas disponibles para entrega"}
+                    {selectedRadius === 80 && "29 localidades próximas disponibles para entrega"}
+                  </p>
+                </div>
               </div>
-            </>
+              
+              <div className="bg-white rounded-lg p-4">
+                <div className="grid grid-cols-2 gap-4 text-sm">
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Entregas estimadas diarias:</span>
+                    <span className="font-semibold">
+                      {selectedRadius === 20 && "12"}
+                      {selectedRadius === 50 && "23"}
+                      {selectedRadius === 80 && "29"}
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Ingresos semanales:</span>
+                    <span className="font-semibold text-emerald-600">
+                      ${selectedRadius === 20 && "1,008"}
+                      ${selectedRadius === 50 && "1,932"}
+                      ${selectedRadius === 80 && "2,436"} USD
+                    </span>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="mt-4 p-3 bg-yellow-100 border border-yellow-300 rounded-lg">
+                <div className="text-sm text-yellow-800">
+                  <div className="font-medium">Sistema de Pagos Mercado Libre</div>
+                  <div>Transferencias semanales automáticas. Sin comisiones ocultas.</div>
+                </div>
+              </div>
+            </Card>
           )}
+
+          <div className="flex justify-between">
+            <Button
+              variant="outline"
+              onClick={() => navigate('/cadastro')}
+              className="border-gray-300 text-gray-600 hover:bg-gray-50"
+            >
+              Volver
+            </Button>
+            
+            <Button
+              onClick={handleSubmit}
+              disabled={submitting || !selectedRadius}
+              className="bg-[#3483FA] hover:bg-[#2968D7] text-white font-medium py-6 text-base rounded-[3px]"
+              style={{ height: '50px' }}
+            >
+              {submitting ? 'Procesando...' : 'Continuar'}
+            </Button>
+          </div>
         </div>
       </div>
       
