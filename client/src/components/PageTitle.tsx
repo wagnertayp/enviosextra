@@ -1,20 +1,20 @@
 import React from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faChevronRight } from '@fortawesome/free-solid-svg-icons';
 
 const PageTitle: React.FC = () => {
   return (
-    <div className="bg-[#3483FA] text-white py-4 px-6 relative overflow-hidden">
-      <div className="container mx-auto">
-        <div className="flex items-center space-x-2 text-sm font-loewe-next-body">
-          <span className="font-bold">Inicio</span>
-          <FontAwesomeIcon icon={faChevronRight} className="text-xs opacity-70" />
-          <span className="font-bold">Socio Conductor Mercado Libre</span>
+    <div className="w-full bg-[#3483FA] py-1 px-6 flex items-center relative overflow-hidden">
+      {/* Meia-lua no canto direito */}
+      <div className="absolute right-0 top-0 bottom-0 w-32 h-full rounded-l-full bg-[#2968D7]"></div>
+      
+      <div className="flex items-center relative z-10">
+        <div className="text-white mr-3">
+          <i className="fas fa-chevron-right text-3xl font-black" style={{color: 'white'}}></i>
+        </div>
+        <div className="leading-none">
+          <h1 className="text-base font-bold text-white mb-0">Socio Conductor</h1>
+          <p className="text-white text-sm mt-0" style={{transform: 'translateY(-2px)'}}>Mercado Libre</p>
         </div>
       </div>
-      
-      {/* Elemento decorativo curvado */}
-      <div className="absolute bottom-0 right-0 w-32 h-8 bg-[#FEE80D] transform rotate-12 translate-x-16 translate-y-4 rounded-l-full opacity-80"></div>
     </div>
   );
 };
