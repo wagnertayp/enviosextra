@@ -451,16 +451,17 @@ const Municipios: React.FC = () => {
             ].map((zone) => (
               <Card 
                 key={zone.radius}
-                className={`relative p-4 cursor-pointer transition-all duration-200 border ${
+                className={`relative p-3 sm:p-4 cursor-pointer transition-all duration-200 border ${
                   selectedRadius === zone.radius
                     ? 'border-[#3483FA] bg-[#F0F7FF] shadow-md'
                     : 'border-gray-200 hover:border-[#3483FA] hover:shadow-sm'
                 }`}
                 onClick={() => setSelectedRadius(zone.radius)}
               >
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-4">
-                    <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
+                {/* Mobile Layout */}
+                <div className="block md:hidden">
+                  <div className="flex items-start gap-3 mb-3">
+                    <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0 mt-0.5 ${
                       selectedRadius === zone.radius 
                         ? 'border-[#3483FA] bg-[#3483FA]' 
                         : 'border-gray-300'
@@ -470,46 +471,97 @@ const Municipios: React.FC = () => {
                       )}
                     </div>
                     
-                    <div className="flex items-center gap-3">
-                      <h3 className="text-lg font-medium text-gray-800">
-                        {zone.title}
-                      </h3>
-                      <span className="bg-[#3483FA] text-white px-2 py-1 rounded text-xs font-medium">
-                        {zone.radius}km
-                      </span>
-                      {zone.recommended && (
-                        <span className="bg-[#FEE80D] text-gray-800 px-2 py-1 rounded text-xs font-medium">
-                          Recomendado
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 mb-1">
+                        <h3 className="text-base font-medium text-gray-800 truncate">
+                          {zone.title}
+                        </h3>
+                        <span className="bg-[#3483FA] text-white px-2 py-1 rounded text-xs font-medium flex-shrink-0">
+                          {zone.radius}km
                         </span>
-                      )}
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-center gap-6 text-sm">
-                    <div className="text-center">
-                      <div className="font-semibold text-[#3483FA]">{zone.locations}</div>
-                      <div className="text-gray-600">localidades</div>
-                    </div>
-                    <div className="text-center">
-                      <div className="font-semibold text-gray-800">${zone.dailyEarnings}</div>
-                      <div className="text-gray-600">ingresos diarios</div>
-                    </div>
-                    <div className="text-center">
-                      <div className="font-semibold text-gray-800">${(zone.dailyEarnings * 30).toLocaleString()}</div>
-                      <div className="text-gray-600">ingresos mensuales</div>
+                        {zone.recommended && (
+                          <span className="bg-[#FEE80D] text-gray-800 px-2 py-1 rounded text-xs font-medium flex-shrink-0">
+                            Rec.
+                          </span>
+                        )}
+                      </div>
+                      <p className="text-sm text-gray-600 mb-3">
+                        {zone.description}
+                      </p>
+                      
+                      <div className="grid grid-cols-3 gap-2 text-xs">
+                        <div className="text-center bg-white rounded p-2 border border-gray-100">
+                          <div className="font-semibold text-[#3483FA]">{zone.locations}</div>
+                          <div className="text-gray-600">localidades</div>
+                        </div>
+                        <div className="text-center bg-white rounded p-2 border border-gray-100">
+                          <div className="font-semibold text-gray-800">${zone.dailyEarnings}</div>
+                          <div className="text-gray-600">diarios</div>
+                        </div>
+                        <div className="text-center bg-white rounded p-2 border border-gray-100">
+                          <div className="font-semibold text-gray-800">${(zone.dailyEarnings * 30).toLocaleString()}</div>
+                          <div className="text-gray-600">mensuales</div>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
-                
-                <div className="mt-2 text-sm text-gray-600 ml-9">
-                  {zone.description}
+
+                {/* Desktop Layout */}
+                <div className="hidden md:block">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-4">
+                      <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
+                        selectedRadius === zone.radius 
+                          ? 'border-[#3483FA] bg-[#3483FA]' 
+                          : 'border-gray-300'
+                      }`}>
+                        {selectedRadius === zone.radius && (
+                          <div className="w-2 h-2 bg-white rounded-full"></div>
+                        )}
+                      </div>
+                      
+                      <div className="flex items-center gap-3">
+                        <h3 className="text-lg font-medium text-gray-800">
+                          {zone.title}
+                        </h3>
+                        <span className="bg-[#3483FA] text-white px-2 py-1 rounded text-xs font-medium">
+                          {zone.radius}km
+                        </span>
+                        {zone.recommended && (
+                          <span className="bg-[#FEE80D] text-gray-800 px-2 py-1 rounded text-xs font-medium">
+                            Recomendado
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                    
+                    <div className="flex items-center gap-6 text-sm">
+                      <div className="text-center">
+                        <div className="font-semibold text-[#3483FA]">{zone.locations}</div>
+                        <div className="text-gray-600">localidades</div>
+                      </div>
+                      <div className="text-center">
+                        <div className="font-semibold text-gray-800">${zone.dailyEarnings}</div>
+                        <div className="text-gray-600">ingresos diarios</div>
+                      </div>
+                      <div className="text-center">
+                        <div className="font-semibold text-gray-800">${(zone.dailyEarnings * 30).toLocaleString()}</div>
+                        <div className="text-gray-600">ingresos mensuales</div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="mt-2 text-sm text-gray-600 ml-9">
+                    {zone.description}
+                  </div>
                 </div>
               </Card>
             ))}
           </div>
 
           {selectedRadius && (
-            <Card className="p-4 bg-[#FFFEF0] border border-[#FEE80D] mb-6">
+            <Card className="p-3 sm:p-4 bg-[#FFFEF0] border border-[#FEE80D] mb-6">
               <div className="flex items-start gap-3">
                 <div className="w-8 h-8 bg-[#3483FA] rounded flex items-center justify-center flex-shrink-0 mt-0.5">
                   <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -517,17 +569,17 @@ const Municipios: React.FC = () => {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                   </svg>
                 </div>
-                <div className="flex-1">
-                  <h3 className="font-medium text-[#3483FA] mb-1">
+                <div className="flex-1 min-w-0">
+                  <h3 className="font-medium text-[#3483FA] mb-1 text-sm sm:text-base">
                     Zona de {selectedRadius}km Seleccionada
                   </h3>
-                  <p className="text-sm text-gray-700 mb-3">
+                  <p className="text-xs sm:text-sm text-gray-700 mb-3">
                     {selectedRadius === 20 && "12 localidades próximas disponibles para entrega"}
                     {selectedRadius === 50 && "23 localidades próximas disponibles para entrega"}
                     {selectedRadius === 80 && "29 localidades próximas disponibles para entrega"}
                   </p>
                   
-                  <div className="grid grid-cols-2 gap-4 text-sm">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-4 text-xs sm:text-sm">
                     <div className="flex justify-between py-1">
                       <span className="text-gray-600">Entregas diarias:</span>
                       <span className="font-medium">

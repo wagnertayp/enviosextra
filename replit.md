@@ -95,11 +95,12 @@ The project supports multiple deployment strategies:
 
 ## Recent Changes
 
-- June 25, 2025: Optimized radius-based delivery zone selection system
-  - Redesigned professional compact layout with horizontal card format
-  - Applied consistent blue (#3483FA) and yellow (#FEE80D) color scheme
+- June 25, 2025: Optimized radius-based delivery zone selection system with mobile responsiveness
+  - Redesigned professional compact layout with responsive mobile and desktop views
+  - Fixed mobile overflow issues with proper container boundaries and text truncation
+  - Applied consistent blue (#3483FA) and yellow (#FEE80D) color scheme throughout
   - Removed gamification elements for business-focused presentation
-  - Streamlined metrics display with clean typography and spacing
+  - Streamlined metrics display with adaptive grid layouts for mobile screens
   - Enhanced selection confirmation with project-standard yellow accent background
   - Maintained three delivery zones: 20km (Local), 50km (Extended), 80km (Wide)
 - June 24, 2025: Implemented distance-based delivery zone selection system
