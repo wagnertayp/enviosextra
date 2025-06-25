@@ -38,6 +38,7 @@ const Municipios: React.FC = () => {
   const [selectedStates, setSelectedStates] = useState<string[]>([]);
   const [selectedMunicipios, setSelectedMunicipios] = useState<string[]>([]);
   const [nearbyMunicipalities, setNearbyMunicipalities] = useState<Municipality[]>([]);
+  const [selectedRadius, setSelectedRadius] = useState<number | null>(null);
   const [, navigate] = useLocation();
   const { toast } = useToast();
 
@@ -360,14 +361,16 @@ const Municipios: React.FC = () => {
       
       deliveryDetails.dailyEarnings = deliveryDetails.dailyDeliveries * 12;
       
-      const dadosCompletos = {
+      // Salvar dados de entrega nos dados do candidato
+      const updatedCandidatoData = {
         ...candidatoData,
-        municipios: municipiosComEntregas,
-        totalEntregas: municipiosComEntregas.reduce((acc, m) => acc + m.entregas, 0)
+        deliveryZone: deliveryDetails,
+        entregasPrevistas: deliveryDetails.dailyDeliveries,
+        ganhosDiarios: deliveryDetails.dailyEarnings
       };
       
-      // Guardar dados completos
-      localStorage.setItem('candidato_data_completo', JSON.stringify(dadosCompletos));
+      localStorage.setItem('candidato_data', JSON.stringify(updatedCandidatoData));
+      localStorage.setItem('delivery_zone', JSON.stringify(deliveryDetails));
       
       // Mostrar modal de carregamento
       setShowLoadingModal(true);

@@ -95,6 +95,11 @@ The project supports multiple deployment strategies:
 
 ## Recent Changes
 
+- June 24, 2025: Implemented distance-based delivery zone selection system
+  - Replaced individual municipality selection with radius-based zones (20km, 50km, 80km)
+  - Shows "29 localidades próximas" available within 80km radius
+  - Clear pricing display showing $12 USD per delivery with realistic earnings projections
+  - Professional card-based interface with Mercado Libre branding and interactive selection
 - June 24, 2025: Fixed infinite loading issue in postal code modal
   - Implemented proper timeout handling (3-second limit) for location detection
   - Added fallback mechanisms to prevent API dependency failures
