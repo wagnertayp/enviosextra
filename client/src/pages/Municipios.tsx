@@ -331,14 +331,10 @@ const Municipios: React.FC = () => {
   };
 
   const handleSubmit = () => {
-    const municipiosSelecionados = nearbyMunicipalities.length > 0 
-      ? selectedMunicipios 
-      : municipios.filter(m => m.selecionado).map(m => m.nome);
-    
-    if (municipiosSelecionados.length === 0) {
+    if (!selectedRadius) {
       toast({
         title: "Selección necesaria",
-        description: "Selecciona al menos un municipio para continuar.",
+        description: "Selecciona un radio de entrega para continuar.",
         variant: "destructive",
       });
       return;
@@ -350,28 +346,19 @@ const Municipios: React.FC = () => {
       // Recuperar dados do candidato
       const candidatoData = JSON.parse(localStorage.getItem('candidato_data') || '{}');
       
-      let municipiosComEntregas;
+      // Calculate delivery details based on selected radius
+      const deliveryDetails = {
+        radius: selectedRadius,
+        localities: selectedRadius === 20 ? 8 : selectedRadius === 50 ? 18 : 29,
+        dailyDeliveries: selectedRadius === 20 ? 
+          Math.floor(Math.random() * 5) + 8 : // 8-12 deliveries
+          selectedRadius === 50 ? 
+          Math.floor(Math.random() * 11) + 15 : // 15-25 deliveries
+          Math.floor(Math.random() * 11) + 25, // 25-35 deliveries
+        dailyEarnings: 0 // Will be calculated below
+      };
       
-      if (nearbyMunicipalities.length > 0) {
-        // Para municípios da API (Chile e outros países)
-        municipiosComEntregas = selectedMunicipios.map(cityName => {
-          const municipality = nearbyMunicipalities.find(m => m.city === cityName);
-          return {
-            nome: cityName,
-            entregas: Math.floor(Math.random() * (48 - 32 + 1)) + 32,
-            distance: municipality?.distance,
-            state: municipality?.state
-          };
-        });
-      } else {
-        // Para Brasil (dados estáticos)
-        municipiosComEntregas = municipios
-          .filter(m => m.selecionado)
-          .map(m => ({
-            nome: m.nome,
-            entregas: m.entregas
-          }));
-      }
+      deliveryDetails.dailyEarnings = deliveryDetails.dailyDeliveries * 12;
       
       const dadosCompletos = {
         ...candidatoData,
@@ -696,79 +683,118 @@ const Municipios: React.FC = () => {
               </Button>
             </div>
             
-            <div className="border rounded-[3px] overflow-hidden p-4 relative">
-              <div className="max-h-[500px] overflow-y-auto custom-scrollbar">
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4">
-                  {municipios.map((municipio, index) => (
-                    <div 
-                      key={index} 
-                      className={`p-2 sm:p-4 border rounded-[3px] cursor-pointer hover:bg-gray-50 transition-colors ${
-                        municipio.selecionado ? 'border-[#3483FA] bg-[#F0F7FF]' : 'border-gray-200'
-                      }`}
-                      onClick={() => toggleMunicipio(index)}
-                    >
-                      <div className="flex items-center justify-between">
-                        <div className="flex-1 min-w-0">
-                          <span className="text-xs sm:text-sm font-medium text-gray-700 truncate block">
-                            {municipio.nome}
-                          </span>
-                          {municipio.distance !== undefined && (
-                            <span className="text-xs text-blue-600 bg-blue-100 px-1 py-0.5 rounded mt-1 inline-block">
-                              {municipio.distance.toFixed(1)} km
-                            </span>
-                          )}
-                        </div>
-                        <Checkbox
-                          checked={municipio.selecionado}
-                          onCheckedChange={() => toggleMunicipio(index)}
-                          className="h-4 w-4 sm:h-5 sm:w-5 border-gray-300 rounded data-[state=checked]:bg-[#3483FA] data-[state=checked]:text-white ml-2"
-                        />
-                      </div>
+            {/* New Distance-Based Delivery Zone Selection */}
+            <div className="bg-white border rounded-[3px] p-6">
+              <div className="text-center mb-6">
+                <h3 className="text-lg font-semibold text-gray-800 mb-2">
+                  Zonas de Entrega Disponibles
+                </h3>
+                <p className="text-sm text-gray-600">
+                  Encontramos <span className="font-bold text-[#3483FA]">29 localidades próximas</span> para entrega en un radio de 80km
+                </p>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                {/* 20km Option */}
+                <div 
+                  className={`p-4 border-2 rounded-[3px] cursor-pointer transition-all ${
+                    selectedRadius === 20 ? 'border-[#3483FA] bg-[#F0F7FF]' : 'border-gray-200 hover:border-[#3483FA]'
+                  }`}
+                  onClick={() => setSelectedRadius(20)}
+                >
+                  <div className="text-center">
+                    <div className="text-2xl font-bold text-[#3483FA] mb-2">20km</div>
+                    <div className="text-sm text-gray-700 mb-3">Radio de entrega</div>
+                    <div className="bg-[#F0F7FF] p-2 rounded-[3px] mb-3">
+                      <div className="text-sm font-medium text-gray-800">8-12 entregas/día</div>
+                      <div className="text-xs text-gray-600">Zona urbana central</div>
                     </div>
-                  ))}
+                    <div className="text-lg font-bold text-green-600">
+                      $96 - $144 <span className="text-sm font-normal">/día</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* 50km Option */}
+                <div 
+                  className={`p-4 border-2 rounded-[3px] cursor-pointer transition-all ${
+                    selectedRadius === 50 ? 'border-[#3483FA] bg-[#F0F7FF]' : 'border-gray-200 hover:border-[#3483FA]'
+                  }`}
+                  onClick={() => setSelectedRadius(50)}
+                >
+                  <div className="text-center">
+                    <div className="text-2xl font-bold text-[#3483FA] mb-2">50km</div>
+                    <div className="text-sm text-gray-700 mb-3">Radio de entrega</div>
+                    <div className="bg-[#F0F7FF] p-2 rounded-[3px] mb-3">
+                      <div className="text-sm font-medium text-gray-800">15-25 entregas/día</div>
+                      <div className="text-xs text-gray-600">Zona metropolitana</div>
+                    </div>
+                    <div className="text-lg font-bold text-green-600">
+                      $180 - $300 <span className="text-sm font-normal">/día</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* 80km Option */}
+                <div 
+                  className={`p-4 border-2 rounded-[3px] cursor-pointer transition-all ${
+                    selectedRadius === 80 ? 'border-[#3483FA] bg-[#F0F7FF]' : 'border-gray-200 hover:border-[#3483FA]'
+                  }`}
+                  onClick={() => setSelectedRadius(80)}
+                >
+                  <div className="text-center">
+                    <div className="text-2xl font-bold text-[#3483FA] mb-2">80km</div>
+                    <div className="text-sm text-gray-700 mb-3">Radio de entrega</div>
+                    <div className="bg-[#F0F7FF] p-2 rounded-[3px] mb-3">
+                      <div className="text-sm font-medium text-gray-800">25-35 entregas/día</div>
+                      <div className="text-xs text-gray-600">Región extendida</div>
+                    </div>
+                    <div className="text-lg font-bold text-green-600">
+                      $300 - $420 <span className="text-sm font-normal">/día</span>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
             
-            {/* Estatísticas de entregas */}
-            {municipios.filter(m => m.selecionado).length > 0 && (
+            {/* Selected Radius Details */}
+            {selectedRadius && (
               <Card className="mt-6 mb-6 p-4 border border-[#3483FA40] bg-[#F0F7FF]">
                 <div className="flex flex-col">
-                  <h3 className="font-medium text-gray-800 mb-2">Previsión de Entregas</h3>
+                  <h3 className="font-medium text-gray-800 mb-2">Detalles de la Zona Seleccionada</h3>
                   <div className="text-sm text-gray-700">
-                    <p>Cantidad promedio diaria de entregas que pueden ser asignadas a ti:</p>
                     <div className="mt-2 p-3 bg-white rounded-[3px] border border-[#3483FA20]">
                       <div className="text-center mb-3 bg-[#F0F7FF] p-2 rounded-[3px]">
                         <span className="font-medium text-[#3483FA]">Mercado Libre paga $12,00 (dólares) por entrega realizada</span>
                       </div>
                       
-                      {municipios.filter(m => m.selecionado).map((m, index) => (
-                        <div key={index} className="grid grid-cols-1 md:grid-cols-3 gap-2 mb-2 last:mb-0">
-                          <span className="font-medium md:col-span-1">{m.nome}:</span>
-                          <span className="font-bold text-[#3483FA] md:col-span-1">
-                            {m.entregas} <span className="font-normal text-gray-700">entregas</span>
-                          </span>
-                          <span className="font-medium text-green-600 md:col-span-1">
-                            ${(m.entregas * 12).toFixed(2).replace('.', ',')} <span className="font-normal text-gray-700">/día</span>
-                          </span>
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
+                        <div>
+                          <div className="text-lg font-bold text-[#3483FA]">Radio {selectedRadius}km</div>
+                          <div className="text-xs text-gray-600">Zona de cobertura</div>
                         </div>
-                      ))}
+                        <div>
+                          <div className="text-lg font-bold text-[#3483FA]">
+                            {selectedRadius === 20 ? '8-12' : selectedRadius === 50 ? '15-25' : '25-35'} entregas
+                          </div>
+                          <div className="text-xs text-gray-600">Promedio diario</div>
+                        </div>
+                        <div>
+                          <div className="text-lg font-bold text-green-600">
+                            ${selectedRadius === 20 ? '96-144' : selectedRadius === 50 ? '180-300' : '300-420'}
+                          </div>
+                          <div className="text-xs text-gray-600">Ganancia diaria</div>
+                        </div>
+                      </div>
                       
-                      {municipios.filter(m => m.selecionado).length > 1 && (
-                        <div className="mt-3 pt-3 border-t border-[#3483FA20] grid grid-cols-1 md:grid-cols-3 gap-2">
-                          <span className="font-semibold">Total diario:</span>
-                          <span className="font-bold text-[#3483FA]">
-                            {municipios
-                              .filter(m => m.selecionado)
-                              .reduce((acc, m) => acc + m.entregas, 0)} <span className="font-normal text-gray-700">entregas</span>
-                          </span>
-                          <span className="font-semibold text-green-600">
-                            ${(municipios
-                              .filter(m => m.selecionado)
-                              .reduce((acc, m) => acc + m.entregas, 0) * 12).toFixed(2).replace('.', ',')} <span className="font-normal text-gray-700">/día</span>
-                          </span>
+                      <div className="mt-4 p-3 bg-[#F0F7FF] rounded-[3px] border border-[#3483FA20] text-center">
+                        <div className="text-sm text-gray-700">
+                          <strong>Localidades disponibles en radio de {selectedRadius}km:</strong>
                         </div>
-                      )}
+                        <div className="text-lg font-bold text-[#3483FA] mt-1">
+                          {selectedRadius === 20 ? '8' : selectedRadius === 50 ? '18' : '29'} localidades
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -780,7 +806,7 @@ const Municipios: React.FC = () => {
                 type="button"
                 onClick={handleSubmit}
                 className="w-full bg-[#3483FA] hover:bg-[#2968D7] text-white font-medium py-6 text-base rounded-[3px]"
-                disabled={submitting}
+                disabled={submitting || !selectedRadius}
                 style={{ height: '50px' }}
               >
                 {submitting ? 'Procesando...' : 'Continuar'}
@@ -873,53 +899,6 @@ const Municipios: React.FC = () => {
           {/* Standard Brazilian municipalities grid - only show when not using API data */}
           {nearbyMunicipalities.length === 0 && (
             <>
-              <div className="mb-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                <h2 className="text-lg sm:text-xl font-semibold text-gray-800">
-                  Marcar Municipios:
-                </h2>
-                <Button
-                  type="button"
-                  onClick={toggleAllMunicipios}
-                  variant="outline"
-                  className="bg-gray-50 hover:bg-gray-100 text-gray-700 border-gray-300 text-sm font-medium px-4 py-2"
-                >
-                  {municipios.every(m => m.selecionado) ? 'Desmarcar Todos' : 'Marcar Todos'}
-                </Button>
-              </div>
-              
-              <div className="border rounded-[3px] overflow-hidden p-4 relative">
-                <div className="max-h-[500px] overflow-y-auto custom-scrollbar">
-                  <div className="grid grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4">
-                    {municipios.map((municipio, index) => (
-                      <div 
-                        key={index} 
-                        className={`p-2 sm:p-4 border rounded-[3px] cursor-pointer hover:bg-gray-50 transition-colors ${
-                          municipio.selecionado ? 'border-[#3483FA] bg-[#F0F7FF]' : 'border-gray-200'
-                        }`}
-                        onClick={() => toggleMunicipio(index)}
-                      >
-                        <div className="flex items-center justify-between">
-                          <div className="flex-1 min-w-0">
-                            <span className="text-xs sm:text-sm font-medium text-gray-700 truncate block">
-                              {municipio.nome}
-                            </span>
-                            {municipio.distance !== undefined && (
-                              <span className="text-xs text-blue-600 bg-blue-100 px-1 py-0.5 rounded mt-1 inline-block">
-                                {municipio.distance.toFixed(1)} km
-                              </span>
-                            )}
-                          </div>
-                          <Checkbox
-                            checked={municipio.selecionado}
-                            onCheckedChange={() => toggleMunicipio(index)}
-                            className="h-4 w-4 sm:h-5 sm:w-5 border-gray-300 rounded data-[state=checked]:bg-[#3483FA] data-[state=checked]:text-white ml-2"
-                          />
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
               
               {/* Estatísticas de entregas */}
               {municipios.filter(m => m.selecionado).length > 0 && (
