@@ -123,46 +123,52 @@ function VehicleAnalysisFlow({ vehicleInfo, className }: { vehicleInfo: any; cla
 
   if (analysisStage === 'analyzing') {
     return (
-      <div className={`p-6 border rounded-md bg-[#FDE80F] bg-opacity-30 border-[#FDE80F] ${className}`}>
-        <div className="flex items-center justify-center mb-4">
-          <img 
-            src="https://i.postimg.cc/j5Mnz0Tm/mercadolibre-logo-7-D54-D946-AE-seeklogo-com.png" 
-            alt="Mercado Libre"
-            className="h-8 w-auto object-contain mr-3"
-          />
-          <span className="text-lg font-semibold text-[#3483FA] font-loewe-next-heading">
-            Analizando vehículo...
-          </span>
+      <div className={`p-4 border border-gray-200 rounded-lg bg-white ${className}`}>
+        <div className="flex items-center gap-3 mb-3">
+          <div className="w-8 h-8 bg-[#3483FA] rounded flex items-center justify-center">
+            <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </div>
+          <div className="flex-1">
+            <h3 className="text-sm font-medium text-gray-900 mb-1">
+              Verificación de Vehículo
+            </h3>
+            <div className="w-full bg-gray-100 rounded-full h-2">
+              <div 
+                className="bg-[#3483FA] h-2 rounded-full transition-all duration-100 ease-out"
+                style={{ width: `${progress}%` }}
+              ></div>
+            </div>
+          </div>
         </div>
         
-        {/* Progress Bar */}
-        <div className="w-full bg-white bg-opacity-50 rounded-full h-3 mb-4">
-          <div 
-            className="bg-[#3483FA] h-3 rounded-full transition-all duration-100 ease-out"
-            style={{ width: `${progress}%` }}
-          ></div>
-        </div>
-        
-        <div className="text-center space-y-2">
-          <p className="text-sm text-[#3483FA] font-loewe-next-body font-medium">
-            Verificando documentación del vehículo
-          </p>
-          <p className="text-xs text-gray-700 font-loewe-next-body">
-            Validando requisitos para ser socio conductor
-          </p>
+        <div className="text-xs text-gray-600">
+          Validando documentación y requisitos para socio conductor
         </div>
       </div>
     );
   }
 
   return (
-    <div className="p-4 border-2 rounded-md bg-[#FEE80D] border-[#FDD835] w-full">
-      {/* Barra de Aprovação Amarela */}
-      <div className="flex items-center justify-center">
-        <CheckCircle className="h-6 w-6 text-black mr-3" />
-        <span className="text-xl text-black font-loewe-next-heading font-normal">
-          ¡Vehículo apto para entregas de Mercado Libre!
-        </span>
+    <div className={`p-4 border border-[#FEE80D] rounded-lg bg-[#FFFEF0] ${className}`}>
+      <div className="flex items-center gap-3">
+        <div className="w-8 h-8 bg-[#3483FA] rounded flex items-center justify-center flex-shrink-0">
+          <CheckCircle className="h-4 w-4 text-white" />
+        </div>
+        <div className="flex-1 min-w-0">
+          <h3 className="text-sm font-medium text-[#3483FA] mb-1">
+            Vehículo Verificado
+          </h3>
+          <p className="text-xs text-gray-700">
+            Tu vehículo cumple con los requisitos para entregas de Mercado Libre
+          </p>
+        </div>
+        <div className="w-6 h-6 bg-[#FEE80D] rounded-full flex items-center justify-center flex-shrink-0">
+          <svg className="w-3 h-3 text-gray-800" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+          </svg>
+        </div>
       </div>
     </div>
   );

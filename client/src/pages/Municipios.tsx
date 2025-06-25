@@ -591,9 +591,9 @@ const Municipios: React.FC = () => {
                     <div className="flex justify-between py-1">
                       <span className="text-gray-600">Ingresos semanales:</span>
                       <span className="font-medium text-[#3483FA]">
-                        ${selectedRadius === 20 && "1,008"}
-                        ${selectedRadius === 50 && "1,932"}
-                        ${selectedRadius === 80 && "2,436"} USD
+                        {selectedRadius === 20 && "$1,008"}
+                        {selectedRadius === 50 && "$1,932"}
+                        {selectedRadius === 80 && "$2,436"} USD
                       </span>
                     </div>
                   </div>
