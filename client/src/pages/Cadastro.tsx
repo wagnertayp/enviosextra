@@ -554,17 +554,8 @@ const Cadastro: React.FC = () => {
                 
                 {/* Área para mostrar as informações do veículo usando o componente VehicleInfoBox */}
                 <div className="mt-3">
-                  <div className="flex justify-between items-start mb-2">
+                  <div className="mb-2">
                     <h3 className="font-loewe-next-heading font-medium text-gray-800">Información del Vehículo</h3>
-                    {vehicleInfo && (
-                      <button 
-                        type="button"
-                        onClick={handleClearPlate}
-                        className="text-xs font-loewe-next-body px-2 py-1 bg-red-50 text-red-600 rounded hover:bg-red-100 transition-colors"
-                      >
-                        NO ES MI VEHÍCULO
-                      </button>
-                    )}
                   </div>
                   
                   {/* Usar o componente VehicleInfoBox */}

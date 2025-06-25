@@ -24,10 +24,8 @@ const Home: React.FC = () => {
   const [, setLocation] = useLocation();
   
   useEffect(() => {
-    // Para teste: limpar dados salvos e sempre mostrar o modal
-    localStorage.removeItem('shopee_delivery_cep_data');
-    setShowCepModal(true);
-    console.log('Modal de CEP ativado');
+    // Modal will only show when user clicks a button
+    console.log('Home page loaded - CEP modal ready for user interaction');
   }, []);
   
   const handleCepConfirm = (cepData: { cep: string, city: string, state: string }) => {

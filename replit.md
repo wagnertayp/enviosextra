@@ -95,6 +95,11 @@ The project supports multiple deployment strategies:
 
 ## Recent Changes
 
+- June 25, 2025: Modified CEP modal behavior to be user-initiated only
+  - Removed automatic popup on page load to prevent blocking site visibility
+  - Modal now appears only when users click registration buttons
+  - Maintained all existing functionality and positioning
+  - Enhanced user experience by allowing site exploration before commitment
 - June 25, 2025: Enhanced vehicle verification component with premium professional design
   - Redesigned vehicle loading and approval states with clean, business-focused appearance
   - Removed oversized yellow backgrounds and large logos for subtle professional look
