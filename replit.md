@@ -95,6 +95,11 @@ The project supports multiple deployment strategies:
 
 ## Recent Changes
 
+- June 25, 2025: Restored breadcrumb navigation to Home page
+  - Fixed missing PageTitle component that was accidentally removed
+  - Applied consistent blue and yellow Mercado Libre branding
+  - Added proper navigation path: "Inicio > Socio Conductor Mercado Libre"
+  - Installed FontAwesome dependencies for chevron icons
 - June 25, 2025: Modified CEP modal behavior to be user-initiated only
   - Removed automatic popup on page load to prevent blocking site visibility
   - Modal now appears only when users click registration buttons
