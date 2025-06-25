@@ -95,12 +95,13 @@ The project supports multiple deployment strategies:
 
 ## Recent Changes
 
-- June 25, 2025: Restored radius-based delivery zone selection system in Municipios page
-  - Implemented three delivery zones: 20km (Local), 50km (Extended), 80km (Wide)
-  - Updated UI with professional card-based selection interface
-  - Added earnings projections for each zone with realistic calculations
-  - Replaced individual municipality selection with simplified radius-based approach
-  - Enhanced user experience with clear pricing display ($12 USD per delivery)
+- June 25, 2025: Optimized radius-based delivery zone selection system
+  - Redesigned professional compact layout with horizontal card format
+  - Applied consistent blue (#3483FA) and yellow (#FEE80D) color scheme
+  - Removed gamification elements for business-focused presentation
+  - Streamlined metrics display with clean typography and spacing
+  - Enhanced selection confirmation with project-standard yellow accent background
+  - Maintained three delivery zones: 20km (Local), 50km (Extended), 80km (Wide)
 - June 24, 2025: Implemented distance-based delivery zone selection system
   - Replaced individual municipality selection with radius-based zones (20km, 50km, 80km)
   - Shows "29 localidades próximas" available within 80km radius

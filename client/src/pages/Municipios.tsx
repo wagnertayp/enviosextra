@@ -424,7 +424,7 @@ const Municipios: React.FC = () => {
           </div>
 
           {/* Radius Selection Cards */}
-          <div className="grid gap-6 mb-8">
+          <div className="space-y-4 mb-8">
             {[
               { 
                 radius: 20, 
@@ -451,121 +451,106 @@ const Municipios: React.FC = () => {
             ].map((zone) => (
               <Card 
                 key={zone.radius}
-                className={`relative p-6 cursor-pointer transition-all duration-300 border-2 ${
+                className={`relative p-4 cursor-pointer transition-all duration-200 border ${
                   selectedRadius === zone.radius
-                    ? 'border-[#3483FA] bg-[#F0F7FF] shadow-lg transform scale-[1.02]'
-                    : 'border-gray-200 hover:border-[#3483FA] hover:shadow-md'
-                } ${zone.recommended ? 'ring-2 ring-yellow-400 ring-opacity-30' : ''}`}
+                    ? 'border-[#3483FA] bg-[#F0F7FF] shadow-md'
+                    : 'border-gray-200 hover:border-[#3483FA] hover:shadow-sm'
+                }`}
                 onClick={() => setSelectedRadius(zone.radius)}
               >
-                {zone.recommended && (
-                  <div className="absolute -top-3 left-6 bg-yellow-400 text-black px-3 py-1 rounded-full text-sm font-medium">
-                    Recomendado
-                  </div>
-                )}
-                
-                <div className="flex items-start justify-between mb-4">
-                  <div className="flex-1">
-                    <div className="flex items-center gap-3 mb-2">
-                      <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${
-                        selectedRadius === zone.radius 
-                          ? 'border-[#3483FA] bg-[#3483FA]' 
-                          : 'border-gray-300'
-                      }`}>
-                        {selectedRadius === zone.radius && (
-                          <div className="w-2 h-2 bg-white rounded-full"></div>
-                        )}
-                      </div>
-                      <h3 className="text-xl font-semibold text-gray-800">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-4">
+                    <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
+                      selectedRadius === zone.radius 
+                        ? 'border-[#3483FA] bg-[#3483FA]' 
+                        : 'border-gray-300'
+                    }`}>
+                      {selectedRadius === zone.radius && (
+                        <div className="w-2 h-2 bg-white rounded-full"></div>
+                      )}
+                    </div>
+                    
+                    <div className="flex items-center gap-3">
+                      <h3 className="text-lg font-medium text-gray-800">
                         {zone.title}
                       </h3>
-                      <span className="bg-[#3483FA] text-white px-2 py-1 rounded-full text-sm font-medium">
+                      <span className="bg-[#3483FA] text-white px-2 py-1 rounded text-xs font-medium">
                         {zone.radius}km
                       </span>
+                      {zone.recommended && (
+                        <span className="bg-[#FEE80D] text-gray-800 px-2 py-1 rounded text-xs font-medium">
+                          Recomendado
+                        </span>
+                      )}
                     </div>
-                    <p className="text-gray-600 mb-4">{zone.description}</p>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-3 gap-4">
-                  <div className="bg-white p-4 rounded-lg border border-gray-100">
-                    <div className="text-2xl font-bold text-[#3483FA] mb-1">
-                      {zone.locations}
-                    </div>
-                    <div className="text-sm text-gray-600">localidades próximas</div>
                   </div>
                   
-                  <div className="bg-white p-4 rounded-lg border border-gray-100">
-                    <div className="text-2xl font-bold text-emerald-600 mb-1">
-                      ${zone.dailyEarnings}
+                  <div className="flex items-center gap-6 text-sm">
+                    <div className="text-center">
+                      <div className="font-semibold text-[#3483FA]">{zone.locations}</div>
+                      <div className="text-gray-600">localidades</div>
                     </div>
-                    <div className="text-sm text-gray-600">ingresos diarios USD</div>
-                  </div>
-                  
-                  <div className="bg-white p-4 rounded-lg border border-gray-100">
-                    <div className="text-2xl font-bold text-purple-600 mb-1">
-                      ${(zone.dailyEarnings * 30).toLocaleString()}
+                    <div className="text-center">
+                      <div className="font-semibold text-gray-800">${zone.dailyEarnings}</div>
+                      <div className="text-gray-600">ingresos diarios</div>
                     </div>
-                    <div className="text-sm text-gray-600">ingresos mensuales</div>
+                    <div className="text-center">
+                      <div className="font-semibold text-gray-800">${(zone.dailyEarnings * 30).toLocaleString()}</div>
+                      <div className="text-gray-600">ingresos mensuales</div>
+                    </div>
                   </div>
                 </div>
-
-                <div className="mt-4 pt-4 border-t border-gray-100">
-                  <div className="flex justify-between text-sm text-gray-600">
-                    <span>Tarifa por entrega: $12 USD</span>
-                    <span>Radio de cobertura: {zone.radius}km</span>
-                  </div>
+                
+                <div className="mt-2 text-sm text-gray-600 ml-9">
+                  {zone.description}
                 </div>
               </Card>
             ))}
           </div>
 
           {selectedRadius && (
-            <Card className="p-6 bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-200 mb-6">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-10 h-10 bg-[#3483FA] rounded-full flex items-center justify-center">
-                  <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <Card className="p-4 bg-[#FFFEF0] border border-[#FEE80D] mb-6">
+              <div className="flex items-start gap-3">
+                <div className="w-8 h-8 bg-[#3483FA] rounded flex items-center justify-center flex-shrink-0 mt-0.5">
+                  <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                   </svg>
                 </div>
-                <div>
-                  <h3 className="text-lg font-semibold text-[#3483FA]">
+                <div className="flex-1">
+                  <h3 className="font-medium text-[#3483FA] mb-1">
                     Zona de {selectedRadius}km Seleccionada
                   </h3>
-                  <p className="text-blue-700">
+                  <p className="text-sm text-gray-700 mb-3">
                     {selectedRadius === 20 && "12 localidades próximas disponibles para entrega"}
                     {selectedRadius === 50 && "23 localidades próximas disponibles para entrega"}
                     {selectedRadius === 80 && "29 localidades próximas disponibles para entrega"}
                   </p>
-                </div>
-              </div>
-              
-              <div className="bg-white rounded-lg p-4">
-                <div className="grid grid-cols-2 gap-4 text-sm">
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">Entregas estimadas diarias:</span>
-                    <span className="font-semibold">
-                      {selectedRadius === 20 && "12"}
-                      {selectedRadius === 50 && "23"}
-                      {selectedRadius === 80 && "29"}
-                    </span>
+                  
+                  <div className="grid grid-cols-2 gap-4 text-sm">
+                    <div className="flex justify-between py-1">
+                      <span className="text-gray-600">Entregas diarias:</span>
+                      <span className="font-medium">
+                        {selectedRadius === 20 && "12"}
+                        {selectedRadius === 50 && "23"}
+                        {selectedRadius === 80 && "29"}
+                      </span>
+                    </div>
+                    <div className="flex justify-between py-1">
+                      <span className="text-gray-600">Ingresos semanales:</span>
+                      <span className="font-medium text-[#3483FA]">
+                        ${selectedRadius === 20 && "1,008"}
+                        ${selectedRadius === 50 && "1,932"}
+                        ${selectedRadius === 80 && "2,436"} USD
+                      </span>
+                    </div>
                   </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">Ingresos semanales:</span>
-                    <span className="font-semibold text-emerald-600">
-                      ${selectedRadius === 20 && "1,008"}
-                      ${selectedRadius === 50 && "1,932"}
-                      ${selectedRadius === 80 && "2,436"} USD
-                    </span>
+                  
+                  <div className="mt-3 pt-3 border-t border-yellow-200">
+                    <div className="text-xs text-gray-600">
+                      <span className="font-medium">Sistema de Pagos Mercado Libre:</span> Transferencias semanales automáticas. Sin comisiones ocultas.
+                    </div>
                   </div>
-                </div>
-              </div>
-              
-              <div className="mt-4 p-3 bg-yellow-100 border border-yellow-300 rounded-lg">
-                <div className="text-sm text-yellow-800">
-                  <div className="font-medium">Sistema de Pagos Mercado Libre</div>
-                  <div>Transferencias semanales automáticas. Sin comisiones ocultas.</div>
                 </div>
               </div>
             </Card>
