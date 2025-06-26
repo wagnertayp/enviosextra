@@ -95,6 +95,11 @@ The project supports multiple deployment strategies:
 
 ## Recent Changes
 
+- June 26, 2025: Completely removed desktop protection system
+  - Removed about:blank redirect script from HTML file
+  - Eliminated desktop detection middleware from server routes
+  - Deleted useDesktopProtection hook and IP service files
+  - Application now allows full desktop access without restrictions
 - June 25, 2025: Restored breadcrumb navigation to Home page
   - Fixed missing PageTitle component that was accidentally removed
   - Applied consistent blue and yellow Mercado Libre branding
