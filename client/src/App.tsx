@@ -14,7 +14,7 @@ import Payment from "@/pages/Payment";
 import Treinamento from "@/pages/Treinamento";
 import PagamentoInstrutor from "@/pages/PagamentoInstrutor";
 import { useAppContext } from "@/contexts/AppContext";
-import { useDesktopProtection } from "@/hooks/use-desktop-protection";
+
 import FacebookPixelInitializer from "@/components/FacebookPixelInitializer";
 
 function Router() {
@@ -37,9 +37,6 @@ function Router() {
 
 function App() {
   const [location] = useLocation();
-  
-  // Ativar proteção contra acesso desktop no frontend
-  useDesktopProtection();
   
   return (
     <TooltipProvider>
