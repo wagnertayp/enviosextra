@@ -95,6 +95,11 @@ The project supports multiple deployment strategies:
 
 ## Recent Changes
 
+- June 27, 2025: Removed field format validations for phone and driver's license
+  - Eliminated automatic formatting for phone number and driver's license fields
+  - Removed pattern validation requirements for numeric fields
+  - Maintained mandatory email format validation only
+  - Simplified form validation schema for international compatibility
 - June 26, 2025: Completely removed desktop protection system
   - Removed about:blank redirect script from HTML file
   - Eliminated desktop detection middleware from server routes

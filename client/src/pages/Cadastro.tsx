@@ -26,28 +26,13 @@ import MOTO___ESCOLHA from "@assets/MOTO_-_ESCOLHA.png";
 
 const formSchema = z.object({
   cpf: z.string()
-    .min(1, "Número de licencia requerido")
-    .refine(value => {
-      // Remove caracteres não numéricos
-      const numericValue = value.replace(/\D/g, '');
-      return numericValue.length >= 1;
-    }, "Ingresa el número de tu licencia de conducir"),
-  nome: z.string().min(3, "Nome deve ter pelo menos 3 caracteres"),
+    .min(1, "Número de licencia requerido"),
+  nome: z.string().min(3, "Nombre debe tener al menos 3 caracteres"),
   telefone: z.string()
-    .min(10, "Telefone inválido")
-    .max(15, "Telefone inválido")
-    .refine(value => {
-      // Remove caracteres não numéricos
-      const numericValue = value.replace(/\D/g, '');
-      return numericValue.length >= 10 && numericValue.length <= 11;
-    }, "Telefone deve ter 10 ou 11 dígitos"),
+    .min(1, "Teléfono requerido"),
   email: z.string().email("Email inválido"),
   placa: z.string()
-    .min(1, "Placa del vehículo requerida")
-    .refine(value => {
-      // Allow any text, just check it's not empty
-      return value.trim().length > 0;
-    }, "Ingresa la placa de tu vehículo"),
+    .min(1, "Placa del vehículo requerida"),
 });
 
 type FormValues = z.infer<typeof formSchema>;
@@ -95,8 +80,6 @@ const Cadastro: React.FC = () => {
     }
   });
 
-  const cpfValue = watch('cpf');
-  const telefoneValue = watch('telefone');
   const placaValue = watch('placa');
   const [debouncedPlaca] = useDebounce(placaValue, 1000);
   
@@ -107,20 +90,7 @@ const Cadastro: React.FC = () => {
     }
   }, [debouncedPlaca]);
 
-  // Formatação de CPF - permitir entrada livre sem formatação
-  const formatCpf = (value: string) => {
-    // Apenas remove caracteres não numéricos, mas mantém o texto como digitado
-    return value.replace(/[^0-9]/g, '');
-  };
 
-  // Formatação de telefone
-  const formatTelefone = (value: string) => {
-    const numericValue = value.replace(/\D/g, '');
-    if (numericValue.length <= 2) return numericValue;
-    if (numericValue.length <= 6) return `(${numericValue.slice(0, 2)}) ${numericValue.slice(2)}`;
-    if (numericValue.length <= 10) return `(${numericValue.slice(0, 2)}) ${numericValue.slice(2, 6)}-${numericValue.slice(6)}`;
-    return `(${numericValue.slice(0, 2)}) ${numericValue.slice(2, 7)}-${numericValue.slice(7)}`;
-  };
 
   // Formatação da placa no formato XXX-0000 (antigo) ou AAA0A00 (Mercosul)
   const formatPlaca = (value: string) => {
@@ -150,16 +120,7 @@ const Cadastro: React.FC = () => {
     }
   };
 
-  // Handlers para formatação automática
-  const handleCpfChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const formatted = formatCpf(e.target.value);
-    setValue('cpf', formatted);
-  };
 
-  const handleTelefoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const formatted = formatTelefone(e.target.value);
-    setValue('telefone', formatted);
-  };
 
   const handlePlacaChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const formatted = formatPlaca(e.target.value);
@@ -422,11 +383,8 @@ const Cadastro: React.FC = () => {
                 <Input
                   id="cpf"
                   {...register('cpf')}
-                  value={cpfValue}
-                  onChange={handleCpfChange}
                   placeholder="Insertar número de licencia"
                   className={errors.cpf ? 'border-red-500' : ''}
-                  inputMode="numeric"
                 />
                 {errors.cpf && (
                   <p className="mt-1 text-sm text-red-600">{errors.cpf.message}</p>
@@ -455,11 +413,8 @@ const Cadastro: React.FC = () => {
                 <Input
                   id="telefone"
                   {...register('telefone')}
-                  value={telefoneValue}
-                  onChange={handleTelefoneChange}
                   placeholder="Insertar número de teléfono"
                   className={errors.telefone ? 'border-red-500' : ''}
-                  inputMode="numeric"
                 />
                 {errors.telefone && (
                   <p className="mt-1 text-sm text-red-600">{errors.telefone.message}</p>
