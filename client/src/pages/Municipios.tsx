@@ -3,7 +3,6 @@ import { useLocation } from 'wouter';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import Breadcrumb from '@/components/Breadcrumb';
-import PageTitle from '@/components/PageTitle';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Card } from '@/components/ui/card';
@@ -411,7 +410,6 @@ const Municipios: React.FC = () => {
       <div className="bg-white min-h-screen flex flex-col">
         <Header />
       <Breadcrumb />
-      <PageTitle title="Zona de Entrega" />
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-4xl mx-auto">
           

@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
 import Header from '@/components/Header';
-import PageTitle from '@/components/PageTitle';
 import HeroSection from '@/components/HeroSection';
 
 import AdvantagesSection from '@/components/AdvantagesSection';
@@ -52,7 +51,6 @@ const Home: React.FC = () => {
         onConfirm={handleCepConfirm}
       />
       <Header />
-      <PageTitle />
       <HeroSection />
       <AdvantagesSection />
       <InfoSection />
