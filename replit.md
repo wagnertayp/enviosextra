@@ -95,6 +95,11 @@ The project supports multiple deployment strategies:
 
 ## Recent Changes
 
+- June 27, 2025: Deleted PageTitle component and fixed blank screen issue
+  - Removed PageTitle component from components directory
+  - Fixed Home and Municipios pages by removing PageTitle imports and usage
+  - Resolved blank screen error on /municipios route
+  - Pages now render properly without the deprecated PageTitle component
 - June 27, 2025: Removed field format validations for phone and driver's license
   - Eliminated automatic formatting for phone number and driver's license fields
   - Removed pattern validation requirements for numeric fields
