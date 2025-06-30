@@ -95,6 +95,12 @@ The project supports multiple deployment strategies:
 
 ## Recent Changes
 
+- June 27, 2025: Added mini calendar for custom start date selection
+  - Implemented 15-day calendar that appears when "Otro día" is clicked
+  - Created compact 3-column grid layout showing abbreviated day names and dates
+  - Added toggle functionality to show/hide calendar without affecting button visibility
+  - Maintained continue button accessibility throughout date selection process
+  - Enhanced user experience with smooth date selection flow on mobile devices
 - June 27, 2025: Fixed mobile visibility of continue button in start date modal
   - Repositioned "Continuar" button higher in modal layout for mobile accessibility
   - Optimized modal height constraints with max-h-[90vh] and scroll capability

@@ -34,6 +34,7 @@ const Municipios: React.FC = () => {
   const [showLoadingModal, setShowLoadingModal] = useState(false);
   const [showStartDateModal, setShowStartDateModal] = useState(false);
   const [selectedStartDate, setSelectedStartDate] = useState<string | null>(null);
+  const [showCalendar, setShowCalendar] = useState(false);
   const [selectedStates, setSelectedStates] = useState<string[]>([]);
   const [selectedMunicipios, setSelectedMunicipios] = useState<string[]>([]);
   const [nearbyMunicipalities, setNearbyMunicipalities] = useState<Municipality[]>([]);
@@ -328,6 +329,44 @@ const Municipios: React.FC = () => {
     }
     
     return dates;
+  };
+
+  const getNext15Days = () => {
+    const days = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
+    const months = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'];
+    
+    const dates = [];
+    const today = new Date();
+    
+    for (let i = 4; i <= 18; i++) { // Start from day 4 to avoid overlap with the 3 main options
+      const date = new Date();
+      date.setDate(today.getDate() + i);
+      
+      const dayName = days[date.getDay()];
+      const dayNumber = date.getDate();
+      const monthNumber = months[date.getMonth()];
+      
+      dates.push({
+        short: `${dayName} ${dayNumber}`,
+        value: `${dayNumber}/${monthNumber}/2025`,
+        dayNumber,
+        monthNumber
+      });
+    }
+    
+    return dates;
+  };
+
+  const handleOtroDiaClick = () => {
+    setShowCalendar(!showCalendar);
+    if (!showCalendar) {
+      setSelectedStartDate('outro');
+    }
+  };
+
+  const handleCalendarDateSelection = (dateValue: string) => {
+    setSelectedStartDate(dateValue);
+    setShowCalendar(false);
   };
 
   const handleSubmit = () => {
@@ -687,12 +726,36 @@ const Municipios: React.FC = () => {
               
               <Button
                 type="button"
-                variant={selectedStartDate === 'outro' ? "default" : "outline"}
-                onClick={() => handleStartDateSelection('outro')}
-                className={`w-full mt-2 py-3 h-auto text-sm ${selectedStartDate === 'outro' ? 'bg-[#3483FA] hover:bg-[#2968D7] border-[#3483FA] shadow-md' : 'border-gray-300 hover:border-[#3483FA] hover:text-[#3483FA]'}`}
+                variant={showCalendar ? "default" : "outline"}
+                onClick={handleOtroDiaClick}
+                className={`w-full mt-2 py-3 h-auto text-sm ${showCalendar ? 'bg-[#3483FA] hover:bg-[#2968D7] border-[#3483FA] shadow-md' : 'border-gray-300 hover:border-[#3483FA] hover:text-[#3483FA]'}`}
               >
                 Otro día
               </Button>
+              
+              {/* Mini Calendar */}
+              {showCalendar && (
+                <div className="mt-3 p-3 bg-[#F0F7FF] rounded-lg border border-[#3483FA20]">
+                  <h4 className="text-sm font-medium text-gray-800 mb-2 text-center">Selecciona una fecha:</h4>
+                  <div className="grid grid-cols-3 gap-2">
+                    {getNext15Days().map((date, index) => (
+                      <Button
+                        key={index}
+                        type="button"
+                        variant={selectedStartDate === date.value ? "default" : "outline"}
+                        onClick={() => handleCalendarDateSelection(date.value)}
+                        className={`py-2 px-1 h-auto text-xs ${
+                          selectedStartDate === date.value 
+                            ? 'bg-[#3483FA] hover:bg-[#2968D7] border-[#3483FA] text-white shadow-md' 
+                            : 'border-gray-300 hover:border-[#3483FA] hover:text-[#3483FA] bg-white'
+                        }`}
+                      >
+                        {date.short}
+                      </Button>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
             
             <div className="mt-4 w-full">
