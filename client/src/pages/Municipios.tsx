@@ -466,14 +466,14 @@ const Municipios: React.FC = () => {
               { 
                 radius: 20, 
                 locations: 12, 
-                dailyEarnings: 144, 
+                dailyEarnings: 86, 
                 title: "Zona Local",
                 description: "Entregas cercanas, menos desplazamiento"
               },
               { 
                 radius: 50, 
                 locations: 23, 
-                dailyEarnings: 276, 
+                dailyEarnings: 166, 
                 title: "Zona Extendida",
                 description: "Balance perfecto entre distancia e ingresos",
                 recommended: true
@@ -481,7 +481,7 @@ const Municipios: React.FC = () => {
               { 
                 radius: 80, 
                 locations: 29, 
-                dailyEarnings: 348, 
+                dailyEarnings: 209, 
                 title: "Zona Amplia",
                 description: "Máximos ingresos, mayor cobertura territorial"
               }
@@ -628,9 +628,9 @@ const Municipios: React.FC = () => {
                     <div className="flex justify-between py-1">
                       <span className="text-gray-600">Ingresos semanales:</span>
                       <span className="font-medium text-[#3483FA]">
-                        {selectedRadius === 20 && "$1,008"}
-                        {selectedRadius === 50 && "$1,932"}
-                        {selectedRadius === 80 && "$2,436"} USD
+                        {selectedRadius === 20 && "$605"}
+                        {selectedRadius === 50 && "$1,159"}
+                        {selectedRadius === 80 && "$1,462"} USD
                       </span>
                     </div>
                   </div>

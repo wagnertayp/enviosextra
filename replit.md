@@ -95,6 +95,11 @@ The project supports multiple deployment strategies:
 
 ## Recent Changes
 
+- June 27, 2025: Reduced delivery earnings values by 40% across all zones
+  - Updated daily earnings: Local $86, Extended $166, Wide $209
+  - Adjusted weekly earnings: Local $605, Extended $1,159, Wide $1,462
+  - Applied changes consistently across mobile and desktop layouts
+  - Monthly calculations automatically adjust from daily values
 - June 27, 2025: Added mini calendar for custom start date selection
   - Implemented 15-day calendar that appears when "Otro día" is clicked
   - Created compact 3-column grid layout showing abbreviated day names and dates
