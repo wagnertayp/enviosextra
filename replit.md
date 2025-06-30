@@ -95,6 +95,12 @@ The project supports multiple deployment strategies:
 
 ## Recent Changes
 
+- June 27, 2025: Fixed mobile visibility of continue button in start date modal
+  - Repositioned "Continuar" button higher in modal layout for mobile accessibility
+  - Optimized modal height constraints with max-h-[90vh] and scroll capability
+  - Reduced spacing and font sizes for better mobile screen utilization
+  - Changed date selection from multi-column to single column layout on mobile
+  - Enhanced user flow completion on mobile devices
 - June 27, 2025: Deleted PageTitle component and fixed blank screen issue
   - Removed PageTitle component from components directory
   - Fixed Home and Municipios pages by removing PageTitle imports and usage

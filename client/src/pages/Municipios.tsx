@@ -649,36 +649,36 @@ const Municipios: React.FC = () => {
         <DialogContent className="p-0 sm:max-w-none w-full h-full max-h-screen overflow-hidden border-none shadow-none bg-white">
           <div className="absolute top-0 left-0 w-full h-full bg-[#FDE80F] z-0"></div>
           
-          <div className="relative flex flex-col justify-center items-center h-screen bg-transparent z-10 p-6 max-w-md mx-auto">
-            <div className="mb-6">
+          <div className="relative flex flex-col bg-transparent z-10 p-4 max-w-md mx-auto max-h-[90vh] overflow-y-auto">
+            <div className="mb-4">
               <img 
                 src="https://i.postimg.cc/j5Mnz0Tm/mercadolibre-logo-7-D54-D946-AE-seeklogo-com.png" 
                 alt="Mercado Libre"
-                className="h-14 w-auto object-contain"
+                className="h-12 w-auto object-contain mx-auto"
               />
             </div>
             
-            <h2 className="text-2xl font-bold text-[#3483FA] text-center mb-4">
+            <h2 className="text-xl font-bold text-[#3483FA] text-center mb-3">
               <i className="fas fa-exclamation-circle mr-2"></i>
               ¡Atención! Oportunidad de Trabajo
             </h2>
             
-            <DialogDescription className="text-base text-center text-gray-700 py-3 mb-4 bg-[#F0F7FF] rounded-lg border border-[#3483FA20] p-4">
+            <DialogDescription className="text-sm text-center text-gray-700 py-2 mb-3 bg-[#F0F7FF] rounded-lg border border-[#3483FA20] p-3">
               En la región que elegiste, tenemos <span className="font-bold text-[#3483FA]">URGENTE</span> necesidad
               de nuevos repartidores, ya que la demanda de entregas está alta y tenemos pocos repartidores registrados.
             </DialogDescription>
             
-            <div className="my-6 w-full">
-              <h3 className="font-medium text-gray-800 mb-4 text-center text-lg">¿Cuándo puedes empezar?</h3>
+            <div className="mb-4 w-full">
+              <h3 className="font-medium text-gray-800 mb-3 text-center">¿Cuándo puedes empezar?</h3>
               
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mt-5">
+              <div className="grid grid-cols-1 gap-2 mt-3">
                 {getNextThreeDays().map((date, index) => (
                   <Button
                     key={index}
                     type="button"
                     variant={selectedStartDate === date.value ? "default" : "outline"}
                     onClick={() => handleStartDateSelection(date.value)}
-                    className={`py-4 px-2 h-auto text-base ${selectedStartDate === date.value ? 'bg-[#3483FA] hover:bg-[#2968D7] border-[#3483FA] shadow-md' : 'border-gray-300 hover:border-[#3483FA] hover:text-[#3483FA]'}`}
+                    className={`py-3 px-2 h-auto text-sm ${selectedStartDate === date.value ? 'bg-[#3483FA] hover:bg-[#2968D7] border-[#3483FA] shadow-md' : 'border-gray-300 hover:border-[#3483FA] hover:text-[#3483FA]'}`}
                   >
                     {date.full}
                   </Button>
@@ -689,18 +689,18 @@ const Municipios: React.FC = () => {
                 type="button"
                 variant={selectedStartDate === 'outro' ? "default" : "outline"}
                 onClick={() => handleStartDateSelection('outro')}
-                className={`w-full mt-4 py-4 h-auto text-base ${selectedStartDate === 'outro' ? 'bg-[#3483FA] hover:bg-[#2968D7] border-[#3483FA] shadow-md' : 'border-gray-300 hover:border-[#3483FA] hover:text-[#3483FA]'}`}
+                className={`w-full mt-2 py-3 h-auto text-sm ${selectedStartDate === 'outro' ? 'bg-[#3483FA] hover:bg-[#2968D7] border-[#3483FA] shadow-md' : 'border-gray-300 hover:border-[#3483FA] hover:text-[#3483FA]'}`}
               >
                 Otro día
               </Button>
             </div>
             
-            <div className="mt-6 w-full">
+            <div className="mt-4 w-full">
               <Button 
                 type="button" 
                 onClick={handleStartDateContinue}
-                className="w-full bg-[#3483FA] hover:bg-[#2968D7] text-white font-medium text-lg py-6" 
-                style={{ height: '60px' }}
+                className="w-full bg-[#3483FA] hover:bg-[#2968D7] text-white font-medium text-base py-4" 
+                style={{ height: '50px' }}
                 disabled={!selectedStartDate}
               >
                 Continuar
